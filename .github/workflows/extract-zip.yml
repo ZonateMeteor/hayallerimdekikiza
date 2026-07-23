@@ -1,0 +1,48 @@
+name: Extract and Deploy project.zip
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'project.zip'
+
+jobs:
+  extract-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract project.zip
+        run: |
+          if [ -f "project.zip" ]; then
+            unzip -o project.zip
+            echo "✅ project.zip extracted successfully"
+          else
+            echo "❌ project.zip not found"
+            exit 1
+          fi
+
+      - name: Remove project.zip
+        run: |
+          rm project.zip
+          echo "✅ project.zip removed after extraction"
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push changes
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: extract project.zip contents to main branch"
+            git push origin main
+            echo "✅ Changes pushed to main branch"
+          fi
