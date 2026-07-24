@@ -11,7 +11,7 @@ type Stage = "hello" | "gift" | "opening" | "flowers" | "message";
 export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
   const [stage, setStage] = useState<Stage>("hello");
   const [clicks, setClicks] = useState(0);
-  const totalClicks = 4;
+  const totalClicks = 7;
 
   function handleGiftClick() {
     const next = clicks + 1;
@@ -69,7 +69,7 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
           </p>
           <p className="text-2xl font-light tracking-wide">{recipientName}</p>
           <GiftBox clicks={clicks} total={totalClicks} opening={false} onClick={handleGiftClick} />
-          <p className="text-muted text-xs">Hediye kutusuna dokun</p>
+          <p className="text-muted text-xs">Hediye kutusuna dokun(bir kaç kere)</p>
         </div>
       )}
 
