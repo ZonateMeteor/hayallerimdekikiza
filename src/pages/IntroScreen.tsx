@@ -26,7 +26,11 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
     <>
       <style>{`
         @keyframes growStem { to { stroke-dashoffset: 0; } }
-        @keyframes bloomBud { to { transform: scale(1); } }
+        @keyframes bloomViolet { 
+          0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+          70% { transform: scale(1.08) rotate(3deg); opacity: 1; }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
         @keyframes boxShake {
           0%, 100% { transform: rotate(0deg) scale(1); }
           20% { transform: rotate(-4deg) scale(1.06); }
@@ -192,16 +196,21 @@ interface Stem {
   angle: number;
   height: number;
   delay: number;
+  hue: string;
 }
 
 function Bouquet() {
-  // İstediğiniz gibi 24 adet dolu dolu ve zengin sap/çiçek konfigürasyonu
-  const stems: Stem[] = Array.from({ length: 24 }).map((_, i) => ({
-    id: i + 1,
-    angle: (i - 11.5) * 6.5, // -75 ile +75 derece arasında zarif bir yelpaze dağılımı
-    height: 130 + (i % 5) * 15,
-    delay: i * 0.05,
-  }));
+  // Vazonun üst kenarından (ağzından) dışarıya doğru yayılan 24 adet menekşe konfigürasyonu
+  const stems: Stem[] = Array.from({ length: 24 }).map((_, i) => {
+    const shades = ["#8b5cf6", "#7c3aed", "#a855f7", "#c084fc", "#6d28d9", "#9333ea"];
+    return {
+      id: i + 1,
+      angle: (i - 11.5) * 7, // Vazomuzun ağzından sağa ve sola doğru geniş açı
+      height: 120 + (i % 5) * 16,
+      delay: i * 0.04,
+      hue: shades[i % shades.length],
+    };
+  });
 
   return (
     <div className="relative flex h-80 w-96 items-end justify-center">
@@ -213,19 +222,19 @@ function Bouquet() {
           className="absolute rounded-full bg-purple-300"
           style={{
             left: `${15 + Math.random() * 70}%`,
-            bottom: '25%',
+            bottom: '30%',
             width: `${Math.random() * 4 + 2}px`,
             height: `${Math.random() * 4 + 2}px`,
             animation: `lidFly ${Math.random() * 3 + 2}s infinite ease-out`,
             opacity: 0,
-            animationDelay: `${i * 0.2}px`,
+            animationDelay: `${i * 0.2}s`,
             boxShadow: '0 0 10px rgba(216, 180, 254, 0.9)'
           }}
         />
       ))}
 
-      {/* İstediğiniz Kodun Birebir Mantığıyla Oluşturulan Çiçek Demeti */}
-      <div className="absolute bottom-[100px] left-1/2 -translate-x-1/2 w-px h-px z-20">
+      {/* Saplar ve Detaylı Menekşe Çiçekleri (Vazonun Tam Kenar Çizgisinden Başlar) */}
+      <div className="absolute bottom-[110px] left-1/2 -translate-x-1/2 w-px h-px z-20 overflow-visible">
         {stems.map((stem) => (
           <div
             key={stem.id}
@@ -241,40 +250,49 @@ function Bouquet() {
                 x1="20"
                 y1={stem.height}
                 x2="20"
-                y2="20"
+                y2="25"
                 stroke="#22c55e"
                 strokeWidth="3.5"
                 strokeLinecap="round"
                 strokeDasharray={stem.height}
                 strokeDashoffset={stem.height}
                 style={{
-                  animation: `growStem 1.5s cubic-bezier(0.4, 0, 0.2, 1) ${stem.delay}s forwards`
+                  animation: `growStem 1.4s cubic-bezier(0.4, 0, 0.2, 1) ${stem.delay}s forwards`
                 }}
               />
-              {/* Sonradan Beliren Mor Tomurcuk */}
-              <circle
-                cx="20"
-                cy="15"
-                r="11"
-                fill="#a855f7"
-                className="origin-[20px_15px] scale-0"
+              
+              {/* Detaylı Menekşe Çiçeği Başlığı */}
+              <g 
+                transform="translate(20, 20)" 
+                className="scale-0 origin-center"
                 style={{
-                  animation: `bloomBud 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${stem.delay + 1.2}s forwards`
+                  animation: `bloomViolet 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${stem.delay + 1.1}s forwards`
                 }}
-              />
+              >
+                {/* Menekşe Taç Yaprakları (Detaylı Katmanlar) */}
+                <path d="M 0 0 C -12 -18, -18 -5, 0 10 C 18 -5, 12 -18, 0 0 Z" fill={stem.hue} opacity="0.9" />
+                <path d="M 0 0 C -15 2, -10 18, 0 12 C 10 18, 15 2, 0 0 Z" fill={stem.hue} filter="brightness(1.2)" />
+                <path d="M 0 0 C -8 -15, 8 -15, 0 -22 C -8 -15, 8 -15, 0 0 Z" fill={stem.hue} filter="brightness(0.8)" />
+                
+                {/* Menekşe İç Damar ve Polen Detayları */}
+                <circle cx="0" cy="0" r="3.5" fill="#fef08a" />
+                <path d="M -1 -2 L -3 -6" stroke="#ca8a04" strokeWidth="1" />
+                <path d="M 1 -2 L 3 -6" stroke="#ca8a04" strokeWidth="1" />
+                <path d="M 0 -1 L 0 -7" stroke="#ca8a04" strokeWidth="1" />
+              </g>
             </svg>
           </div>
         ))}
       </div>
 
-      {/* Cam Vazo Tasarımı */}
+      {/* Cam Vazo Tasarımı (Saplar sadece ağız kısmından çıkar, içinde görünmez) */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center z-30 opacity-95 pointer-events-none">
         {/* Vazo Ağzı */}
-        <div className="w-[55px] h-2.5 bg-purple-200/40 border-2 border-purple-300/50 rounded-full backdrop-blur-sm"></div>
+        <div className="w-[60px] h-3 bg-purple-200/40 border-2 border-purple-300/50 rounded-full backdrop-blur-sm"></div>
         {/* Vazo Boynu */}
-        <div className="w-[42px] h-[30px] bg-purple-900/30 border-x-2 border-purple-400/40 -mt-1 backdrop-blur-sm"></div>
+        <div className="w-[44px] h-[28px] bg-purple-900/40 border-x-2 border-purple-400/40 -mt-1 backdrop-blur-sm"></div>
         {/* Vazo Gövdesi */}
-        <div className="w-28 h-[110px] bg-gradient-to-br from-purple-900/40 to-indigo-950/60 border border-purple-400/30 rounded-t-2xl rounded-b-[50px] shadow-[0_10px_30px_rgba(147,51,234,0.3)] backdrop-blur-md"></div>
+        <div className="w-32 h-[110px] bg-gradient-to-br from-purple-950/60 to-indigo-950/80 border border-purple-400/30 rounded-t-2xl rounded-b-[50px] shadow-[0_15px_40px_rgba(147,51,234,0.4)] backdrop-blur-md"></div>
       </div>
 
     </div>
