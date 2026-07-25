@@ -27,8 +27,8 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
       <style>{`
         @keyframes growStem { to { stroke-dashoffset: 0; } }
         @keyframes bloomFlower { 
-          0% { transform: scale(0) rotate(-10deg); opacity: 0; }
-          70% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+          0% { transform: scale(0) rotate(-15deg); opacity: 0; }
+          70% { transform: scale(1.12) rotate(4deg); opacity: 1; }
           100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
         @keyframes floatDust {
@@ -196,99 +196,118 @@ function GiftBox({
   );
 }
 
-interface StemConfig {
+interface RichFlowerConfig {
   id: number;
   startX: number;
   endX: number;
   height: number;
   delay: number;
-  color: string;
-  type: "tulip" | "rose" | "star";
+  colorMain: string;
+  colorSecondary: string;
+  type: "peony" | "daisy" | "orchid";
 }
 
 function GlassVaseBouquetScene() {
-  const stems: StemConfig[] = [
-    { id: 1, startX: 95, endX: 55, height: 180, delay: 0.1, color: "#e879f9", type: "tulip" },
-    { id: 2, startX: 97, endX: 75, height: 210, delay: 0.2, color: "#c084fc", type: "rose" },
-    { id: 3, startX: 100, endX: 100, height: 230, delay: 0.3, color: "#f43f5e", type: "rose" },
-    { id: 4, startX: 103, endX: 125, height: 210, delay: 0.4, color: "#818cf8", type: "star" },
-    { id: 5, startX: 105, endX: 145, height: 180, delay: 0.5, color: "#fbcfe8", type: "tulip" },
+  // Çok katmanlı, zengin ve estetik duran lüks çiçek demeti konfigürasyonu
+  const flowers: RichFlowerConfig[] = [
+    { id: 1, startX: 95, endX: 40, height: 190, delay: 0.1, colorMain: "#f472b6", colorSecondary: "#db2777", type: "peony" },
+    { id: 2, startX: 97, endX: 68, height: 220, delay: 0.2, colorMain: "#c084fc", colorSecondary: "#9333ea", type: "orchid" },
+    { id: 3, startX: 100, endX: 100, height: 245, delay: 0.3, colorMain: "#fb7185", colorSecondary: "#e11d48", type: "peony" },
+    { id: 4, startX: 103, endX: 132, height: 215, delay: 0.4, colorMain: "#e879f9", colorSecondary: "#c084fc", type: "daisy" },
+    { id: 5, startX: 105, endX: 160, height: 185, delay: 0.5, colorMain: "#fbcfe8", colorSecondary: "#f472b6", type: "orchid" },
   ];
 
   return (
     <div className="relative flex h-96 w-[420px] items-end justify-center">
       
       {/* Parıltılı Toz Efekti */}
-      {Array.from({ length: 22 }).map((_, i) => (
+      {Array.from({ length: 25 }).map((_, i) => (
         <span
           key={i}
           className="absolute rounded-full pointer-events-none"
           style={{
             left: `${5 + Math.random() * 90}%`,
-            bottom: `${10 + Math.random() * 60}%`,
-            width: `${Math.random() * 3 + 1}px`,
-            height: `${Math.random() * 3 + 1}px`,
-            backgroundColor: i % 3 === 0 ? '#fde047' : '#e9d5ff',
+            bottom: `${10 + Math.random() * 65}%`,
+            width: `${Math.random() * 3.5 + 1}px`,
+            height: `${Math.random() * 3.5 + 1}px`,
+            backgroundColor: i % 3 === 0 ? '#fde047' : '#f3e8ff',
             animation: `floatDust ${Math.random() * 3 + 2.5}s infinite ease-out`,
-            animationDelay: `${i * 0.12}s`,
-            boxShadow: '0 0 8px rgba(233, 213, 255, 0.8)'
+            animationDelay: `${i * 0.1}s`,
+            boxShadow: '0 0 10px rgba(243, 232, 255, 0.9)'
           }}
         />
       ))}
 
-      {/* Çiçekler ve Zarif Saplar */}
-      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 w-[200px] h-[250px] z-20 overflow-visible pointer-events-none">
-        <svg viewBox="0 0 200 250" className="w-full h-full overflow-visible">
-          {stems.map((stem) => {
-            const rootY = 145; // Vazonun boğaz seviyesi
-            const topY = rootY - stem.height + 60;
+      {/* Detaylı Çiçekler ve Zarif Saplar */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 w-[220px] h-[260px] z-20 overflow-visible pointer-events-none">
+        <svg viewBox="0 0 220 260" className="w-full h-full overflow-visible">
+          {flowers.map((flower) => {
+            const rootY = 150; // Vazo boğaz hizası
+            const topY = rootY - flower.height + 65;
 
             return (
-              <g key={stem.id}>
-                {/* Uzayan Kavisli Sap */}
+              <g key={flower.id}>
+                {/* Kavisli Yeşil Sap */}
                 <path
-                  d={`M 100 ${rootY} Q ${(100 + stem.endX)/2} ${rootY - 40} ${stem.endX} ${topY}`}
+                  d={`M 110 ${rootY} Q ${(110 + flower.endX)/2} ${rootY - 45} ${flower.endX} ${topY}`}
                   fill="none"
-                  stroke="#4ade80"
-                  strokeWidth="3"
+                  stroke="#22c55e"
+                  strokeWidth="3.5"
                   strokeLinecap="round"
-                  strokeDasharray={stem.height}
-                  strokeDashoffset={stem.height}
+                  strokeDasharray={flower.height}
+                  strokeDashoffset={flower.height}
                   style={{
-                    animation: `growStem 1.2s cubic-bezier(0.4, 0, 0.2, 1) ${stem.delay}фельs forwards`
+                    animation: `growStem 1.3s cubic-bezier(0.4, 0, 0.2, 1) ${flower.delay}s forwards`
                   }}
                 />
 
-                {/* Çiçek Başlığı */}
+                {/* Zengin ve Çok Katmanlı Çiçek Başlığı */}
                 <g 
-                  transform={`translate(${stem.endX}, ${topY})`}
+                  transform={`translate(${flower.endX}, ${topY})`}
                   className="scale-0 origin-center"
                   style={{
-                    animation: `bloomFlower 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) ${stem.delay + 0.9}s forwards`
+                    animation: `bloomFlower 1s cubic-bezier(0.34, 1.56, 0.64, 1) ${flower.delay + 0.95}s forwards`
                   }}
                 >
-                  {stem.type === "tulip" && (
-                    <>
-                      <path d="M 0 10 Q -15 -10 -10 -25 Q -2 -15 0 0 Z" fill={stem.color} opacity="0.9" />
-                      <path d="M 0 10 Q 15 -10 10 -25 Q 2 -15 0 0 Z" fill={stem.color} opacity="0.9" />
-                      <path d="M 0 12 Q -10 -25 0 -35 Q 10 -25 0 12 Z" fill={stem.color} />
-                    </>
+                  {/* Papatya / Yıldız Çiçek Modeli */}
+                  {flower.type === "daisy" && (
+                    <g>
+                      {Array.from({ length: 8 }).map((_, pIdx) => (
+                        <ellipse
+                          key={pIdx}
+                          cx="0"
+                          cy="0"
+                          rx="6"
+                          ry="18"
+                          fill={flower.colorMain}
+                          transform={`rotate(${pIdx * 45})`}
+                        />
+                      ))}
+                      <circle cx="0" cy="0" r="7" fill="#fef08a" filter="drop-shadow(0 0 6px #fde047)" />
+                      <circle cx="0" cy="0" r="3" fill="#ca8a04" />
+                    </g>
                   )}
 
-                  {stem.type === "rose" && (
-                    <>
-                      <circle cx="0" cy="0" r="14" fill={stem.color} />
-                      <circle cx="-3" cy="-3" r="10" fill={stem.color} filter="brightness(1.2)" />
-                      <circle cx="2" cy="2" r="7" fill={stem.color} filter="brightness(0.85)" />
-                      <circle cx="0" cy="0" r="3" fill="#fef08a" />
-                    </>
+                  {/* Şakayık / Katmerli Gül Modeli */}
+                  {flower.type === "peony" && (
+                    <g>
+                      <circle cx="0" cy="0" r="22" fill={flower.colorSecondary} opacity="0.7" />
+                      <circle cx="0" cy="0" r="17" fill={flower.colorMain} />
+                      <circle cx="-3" cy="-3" r="12" fill={flower.colorSecondary} filter="brightness(1.15)" />
+                      <circle cx="3" cy="2" r="8" fill={flower.colorMain} filter="brightness(1.25)" />
+                      <circle cx="0" cy="0" r="4" fill="#fef08a" />
+                    </g>
                   )}
 
-                  {stem.type === "star" && (
-                    <>
-                      <path d="M 0 -16 Q 4 -4 14 0 Q 4 4 0 16 Q -4 4 -14 0 Q -4 -4 0 -16 Z" fill={stem.color} />
-                      <circle cx="0" cy="0" r="4" fill="#fef08a" filter="drop-shadow(0 0 4px #fde047)" />
-                    </>
+                  {/* Zarif Orkide Modeli */}
+                  {flower.type === "orchid" && (
+                    <g>
+                      <path d="M 0 -18 C -12 -28 -22 -10 0 10 C 22 -10 12 -28 0 -18 Z" fill={flower.colorMain} />
+                      <path d="M -14 -5 C -25 5 -15 22 0 12 C -5 5 -10 0 -14 -5 Z" fill={flower.colorSecondary} />
+                      <path d="M 14 -5 C 25 5 15 22 0 12 C 5 5 10 0 14 -5 Z" fill={flower.colorSecondary} />
+                      <path d="M 0 0 C -8 15 0 28 0 28 C 0 28 8 15 0 0 Z" fill={flower.colorMain} filter="brightness(1.1)" />
+                      <circle cx="0" cy="2" r="4.5" fill="#fef08a" filter="drop-shadow(0 0 5px #fde047)" />
+                    </g>
                   )}
                 </g>
               </g>
@@ -297,27 +316,39 @@ function GlassVaseBouquetScene() {
         </svg>
       </div>
 
-      {/* Modern Cam Vazo */}
+      {/* Şık ve Lüks Kristal Cam Vazo */}
       <div className="absolute bottom-0 z-30 flex flex-col items-center pointer-events-none">
-        <svg width="130" height="150" viewBox="0 0 130 150" className="overflow-visible drop-shadow-[0_20px_30px_rgba(107,33,168,0.4)]">
+        <svg width="140" height="160" viewBox="0 0 140 160" className="overflow-visible drop-shadow-[0_25px_35px_rgba(107,33,168,0.5)]">
           {/* Vazo İçi Su Efekti */}
-          <path d="M 45 65 Q 65 60 85 65 L 95 135 Q 65 145 35 135 Z" fill="#c084fc" opacity="0.15" />
+          <path d="M 45 65 Q 70 58 95 65 L 105 145 Q 70 155 35 145 Z" fill="url(#waterGradient)" opacity="0.35" />
+          
+          <defs>
+            <linearGradient id="waterGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#e879f9" />
+              <stop offset="100%" stopColor="#7e22ce" />
+            </linearGradient>
+            <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.12)" />
+              <stop offset="50%" stopColor="rgba(216, 180, 254, 0.03)" />
+              <stop offset="100%" stopColor="rgba(255, 255, 255, 0.15)" />
+            </linearGradient>
+          </defs>
 
-          {/* Cam Vazo Gövdesi */}
+          {/* Vazo Gövdesi */}
           <path 
-            d="M 45 50 L 85 50 Q 95 55 98 70 L 108 135 Q 112 145 95 145 L 35 145 Q 18 145 22 135 L 32 70 Q 35 55 45 50 Z" 
-            fill="rgba(255, 255, 255, 0.03)" 
-            stroke="rgba(216, 180, 254, 0.4)" 
-            strokeWidth="2" 
+            d="M 45 48 L 95 48 Q 105 55 108 72 L 120 142 Q 124 155 102 155 L 38 155 Q 16 155 20 142 L 32 72 Q 35 55 45 48 Z" 
+            fill="url(#glassGradient)" 
+            stroke="rgba(233, 213, 255, 0.5)" 
+            strokeWidth="2.5" 
             strokeLinejoin="round"
           />
 
           {/* Vazo Ağzı (Elips) */}
-          <ellipse cx="65" cy="50" rx="20" ry="6" fill="rgba(255, 255, 255, 0.08)" stroke="rgba(216, 180, 254, 0.5)" strokeWidth="1.5" />
+          <ellipse cx="70" cy="48" rx="25" ry="7" fill="rgba(255, 255, 255, 0.1)" stroke="rgba(233, 213, 255, 0.6)" strokeWidth="2" />
 
-          {/* Cam Parlamaları / Yansımalar */}
-          <path d="M 38 75 Q 35 100 42 125" fill="none" stroke="rgba(255, 255, 255, 0.35)" strokeWidth="3" strokeLinecap="round" />
-          <path d="M 92 75 Q 94 95 89 115" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1.5" strokeLinecap="round" />
+          {/* Gerçekçi Cam Işık Yansımaları */}
+          <path d="M 42 75 Q 38 105 46 135" fill="none" stroke="rgba(255, 255, 255, 0.5)" strokeWidth="3.5" strokeLinecap="round" />
+          <path d="M 100 75 Q 103 100 96 125" fill="none" stroke="rgba(255, 255, 255, 0.2)" strokeWidth="2" strokeLinecap="round" />
         </svg>
       </div>
 
