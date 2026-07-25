@@ -25,14 +25,8 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
   return (
     <>
       <style>{`
-        @keyframes drawStem {
-          to { stroke-dashoffset: 0; }
-        }
-        @keyframes bloomFlower {
-          0% { transform: scale(0) rotate(-10deg); opacity: 0; filter: blur(4px); }
-          70% { transform: scale(1.05) rotate(2deg); opacity: 1; filter: blur(0px); }
-          100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0px); }
-        }
+        @keyframes growStem { to { stroke-dashoffset: 0; } }
+        @keyframes bloomBud { to { transform: scale(1); } }
         @keyframes boxShake {
           0%, 100% { transform: rotate(0deg) scale(1); }
           20% { transform: rotate(-4deg) scale(1.06); }
@@ -193,126 +187,96 @@ function GiftBox({
   );
 }
 
+interface Stem {
+  id: number;
+  angle: number;
+  height: number;
+  delay: number;
+}
+
 function Bouquet() {
+  // İstediğiniz gibi 24 adet dolu dolu ve zengin sap/çiçek konfigürasyonu
+  const stems: Stem[] = Array.from({ length: 24 }).map((_, i) => ({
+    id: i + 1,
+    angle: (i - 11.5) * 6.5, // -75 ile +75 derece arasında zarif bir yelpaze dağılımı
+    height: 130 + (i % 5) * 15,
+    delay: i * 0.05,
+  }));
+
   return (
     <div className="relative flex h-80 w-96 items-end justify-center">
       
       {/* Çiçek Tozları / Işık Parçacıkları */}
-      {Array.from({ length: 18 }).map((_, i) => (
+      {Array.from({ length: 15 }).map((_, i) => (
         <span
           key={i}
           className="absolute rounded-full bg-purple-300"
           style={{
-            left: `${10 + Math.random() * 80}%`,
+            left: `${15 + Math.random() * 70}%`,
             bottom: '25%',
             width: `${Math.random() * 4 + 2}px`,
             height: `${Math.random() * 4 + 2}px`,
             animation: `lidFly ${Math.random() * 3 + 2}s infinite ease-out`,
             opacity: 0,
-            animationDelay: `${i * 0.2}s`,
+            animationDelay: `${i * 0.2}px`,
             boxShadow: '0 0 10px rgba(216, 180, 254, 0.9)'
           }}
         />
       ))}
 
-      {/* 28 Adet Dolu Dolu ve Katmanlı Çiçek (Arka ve Ön Katmanlar Olarak Dağıtılmıştır) */}
-      <div className="absolute bottom-12 z-10 w-full h-full flex justify-center items-end pointer-events-none">
-        {flowerData.map((f, i) => (
-          <div key={i} className="absolute bottom-0" style={{ left: `calc(50% + ${f.offsetX}px)` }}>
-             <Flower 
-               size={f.size} 
-               delay={f.delay} 
-               height={f.height} 
-               curvature={f.curvature}
-               baseHue={f.hue}
-             />
+      {/* İstediğiniz Kodun Birebir Mantığıyla Oluşturulan Çiçek Demeti */}
+      <div className="absolute bottom-[100px] left-1/2 -translate-x-1/2 w-px h-px z-20">
+        {stems.map((stem) => (
+          <div
+            key={stem.id}
+            className="absolute bottom-0 left-[-20px] w-10 origin-bottom"
+            style={{ 
+              transform: `rotate(${stem.angle}deg)`,
+              height: `${stem.height}px`
+            }}
+          >
+            <svg width="40" height={stem.height} viewBox={`0 0 40 ${stem.height}`} className="overflow-visible">
+              {/* Uzayan Yeşil Sap */}
+              <line
+                x1="20"
+                y1={stem.height}
+                x2="20"
+                y2="20"
+                stroke="#22c55e"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeDasharray={stem.height}
+                strokeDashoffset={stem.height}
+                style={{
+                  animation: `growStem 1.5s cubic-bezier(0.4, 0, 0.2, 1) ${stem.delay}s forwards`
+                }}
+              />
+              {/* Sonradan Beliren Mor Tomurcuk */}
+              <circle
+                cx="20"
+                cy="15"
+                r="11"
+                fill="#a855f7"
+                className="origin-[20px_15px] scale-0"
+                style={{
+                  animation: `bloomBud 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${stem.delay + 1.2}s forwards`
+                }}
+              />
+            </svg>
           </div>
         ))}
       </div>
 
-      {/* Şeffaf Kristal Vazo */}
-      <div className="absolute bottom-0 z-30 h-24 w-40 drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)] pointer-events-none">
-        <svg viewBox="0 0 120 70" className="w-full h-full">
-           {/* Vazo arkası yansıma */}
-           <path d="M 25,2 L 95,2 L 105,65 L 15,65 Z" fill="rgba(168, 85, 247, 0.05)" />
-           {/* Su seviyesi */}
-           <ellipse cx="60" cy="22" rx="38" ry="6" fill="rgba(192, 132, 252, 0.2)" />
-           {/* Vazo Gövde Cam Dokusu */}
-           <path d="M 25,2 Q 60,8 95,2 L 108,62 Q 110,68 102,68 L 18,68 Q 10,68 12,62 Z" fill="rgba(30, 27, 75, 0.4)" stroke="rgba(216, 180, 254, 0.4)" strokeWidth="1.5" />
-           {/* Cam Parlaması */}
-           <path d="M 22,15 L 30,55" stroke="rgba(255, 255, 255, 0.3)" strokeWidth="3" strokeLinecap="round" />
-           <path d="M 32,8 L 36,45" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
+      {/* Cam Vazo Tasarımı */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center z-30 opacity-95 pointer-events-none">
+        {/* Vazo Ağzı */}
+        <div className="w-[55px] h-2.5 bg-purple-200/40 border-2 border-purple-300/50 rounded-full backdrop-blur-sm"></div>
+        {/* Vazo Boynu */}
+        <div className="w-[42px] h-[30px] bg-purple-900/30 border-x-2 border-purple-400/40 -mt-1 backdrop-blur-sm"></div>
+        {/* Vazo Gövdesi */}
+        <div className="w-28 h-[110px] bg-gradient-to-br from-purple-900/40 to-indigo-950/60 border border-purple-400/30 rounded-t-2xl rounded-b-[50px] shadow-[0_10px_30px_rgba(147,51,234,0.3)] backdrop-blur-md"></div>
       </div>
-    </div>
-  );
-}
 
-// 28 adet çiçeğin vazo içinden dışarıya doğru muazzam yayılım ve açı konfigürasyonu
-const flowerData = Array.from({ length: 28 }).map((_, i) => {
-  // Soldan sağa geniş bir yayılım (-130px ile +130px arası)
-  const offsetX = (i - 14) * 9 + (Math.sin(i) * 12);
-  // Merkezdekiler uzun, kenardakiler kısa ve yanlara doğru eğimli
-  const height = 150 + Math.sin(i * 0.5) * 45 + (Math.abs(offsetX) * 0.3);
-  const size = 35 + (i % 4) * 9;
-  const delay = i * 0.04; // Kademeli akış
-  const curvature = offsetX * 0.6; // Vazodan çıkarken dışa doğru bükülme
-  const hues = ['#9333ea', '#a855f7', '#c084fc', '#d8b4fe', '#7e22ce', '#e9d5ff'];
-  const hue = hues[i % hues.length];
-  return { offsetX, height, size, delay, curvature, hue };
-});
-
-function Flower({ size, delay, height, curvature, baseHue }: { size: number; delay: number; height: number; curvature: number; baseHue: string }) {
-  return (
-    <div className="relative flex flex-col items-center justify-end" style={{ height: `${height}px`, width: `${size}px` }}>
-       
-       {/* Vazodan Dışarı Doğru Büyüyen Organik Sap */}
-       <svg className="absolute bottom-0 z-0 overflow-visible" width="100" height={height}>
-         <path 
-           d={`M 50 ${height} Q ${50 + curvature * 0.5} ${height * 0.5} ${50 + curvature} 0`}
-           stroke="#4ade80" strokeWidth="2.5" fill="none" strokeLinecap="round"
-           style={{
-             strokeDasharray: height + 50,
-             strokeDashoffset: height + 50,
-             animation: `drawStem 1.2s ease-out forwards ${delay}s`
-           }}
-         />
-       </svg>
-       
-       {/* Ultra Gerçekçi, Çok Katmanlı Açan Çiçek Başlığı */}
-       <div 
-         className="absolute top-0 z-20" 
-         style={{
-           width: `${size}px`, height: `${size}px`,
-           transformOrigin: 'bottom center',
-           animation: `bloomFlower 1.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards ${delay + 0.5}s`,
-           opacity: 0,
-           transform: 'scale(0)'
-         }}
-       >
-         <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)]">
-           {/* Arka Taç Yapraklar (Derinlik Gölgesi) */}
-           <path d="M 50 15 C 10 10, 15 90, 50 95 C 85 90, 90 10, 50 15 Z" fill={baseHue} filter="brightness(0.5)" />
-           
-           {/* Çevresel Taç Yaprak Katmanı (Döndürülmüş detaylar) */}
-           <g transform="rotate(45 50 55)">
-             <path d="M 50 90 C 20 80, 10 30, 45 25 C 55 45, 50 75, 50 90 Z" fill={baseHue} filter="brightness(0.8)" />
-           </g>
-           <g transform="rotate(-45 50 55)">
-             <path d="M 50 90 C 80 80, 90 30, 55 25 C 45 45, 50 75, 50 90 Z" fill={baseHue} filter="brightness(0.8)" />
-           </g>
-           
-           {/* Ön Canlı Taç Yapraklar */}
-           <path d="M 50 95 C 20 70, 15 35, 50 25 C 85 35, 80 70, 50 95 Z" fill={baseHue} filter="brightness(1.15)" />
-           <path d="M 50 95 C 35 65, 30 40, 50 35 C 70 40, 65 65, 50 95 Z" fill={baseHue} filter="brightness(1.35)" />
-           
-           {/* Detaylı Merkez Polen Dokusu */}
-           <circle cx="50" cy="55" r="8" fill="#fef08a" filter="drop-shadow(0 0 4px #fde047)" />
-           <circle cx="48" cy="53" r="1.5" fill="#ca8a04" />
-           <circle cx="53" cy="56" r="1.5" fill="#ca8a04" />
-           <circle cx="50" cy="58" r="1.5" fill="#ca8a04" />
-         </svg>
-       </div>
     </div>
   );
 }
