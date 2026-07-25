@@ -26,9 +26,9 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
     <>
       <style>{`
         @keyframes growStem { to { stroke-dashoffset: 0; } }
-        @keyframes bloomViolet { 
-          0% { transform: scale(0) rotate(-15deg); opacity: 0; }
-          70% { transform: scale(1.08) rotate(3deg); opacity: 1; }
+        @keyframes bloomFlower { 
+          0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+          70% { transform: scale(1.1) rotate(2deg); opacity: 1; }
           100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
         @keyframes floatDust {
@@ -111,9 +111,9 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
         )}
 
         {stage === "flowers" && (
-          <div className="relative z-10 flex flex-col items-center gap-10 animate-in fade-in duration-1000">
-            <WildFlowerScene />
-            <p className="text-4xl font-extralight tracking-widest text-purple-100">{recipientName}</p>
+          <div className="relative z-10 flex flex-col items-center gap-6 animate-in fade-in duration-1000">
+            <GlassVaseBouquetScene />
+            <p className="text-4xl font-extralight tracking-widest text-purple-100 mt-2">{recipientName}</p>
             <button
               onClick={() => setStage("message")}
               className="group relative overflow-hidden rounded-full border border-purple-400/30 bg-purple-900/20 px-12 py-4 text-sm font-bold tracking-[0.3em] text-purple-100 backdrop-blur-md transition-all hover:bg-purple-800/40 hover:border-purple-400/60 shadow-[0_0_30px_rgba(147,51,234,0.3)]"
@@ -196,115 +196,129 @@ function GiftBox({
   );
 }
 
-interface FlowerItem {
+interface StemConfig {
   id: number;
-  angle: number;
+  startX: number;
+  endX: number;
   height: number;
   delay: number;
-  hue: string;
-  xOffset: number;
+  color: string;
+  type: "tulip" | "rose" | "star";
 }
 
-function WildFlowerScene() {
-  // Görseldeki gibi ana odak menekşeleri (farklı yükseklik ve açılarda)
-  const mainFlowers: FlowerItem[] = [
-    { id: 1, angle: -12, height: 160, delay: 0.1, hue: "#c084fc", xOffset: -30 },
-    { id: 2, angle: 4, height: 190, delay: 0.3, hue: "#a855f7", xOffset: 0 },
-    { id: 3, angle: 18, height: 150, delay: 0.5, hue: "#d8b4fe", xOffset: 35 },
+function GlassVaseBouquetScene() {
+  const stems: StemConfig[] = [
+    { id: 1, startX: 95, endX: 55, height: 180, delay: 0.1, color: "#e879f9", type: "tulip" },
+    { id: 2, startX: 97, endX: 75, height: 210, delay: 0.2, color: "#c084fc", type: "rose" },
+    { id: 3, startX: 100, endX: 100, height: 230, delay: 0.3, color: "#f43f5e", type: "rose" },
+    { id: 4, startX: 103, endX: 125, height: 210, delay: 0.4, color: "#818cf8", type: "star" },
+    { id: 5, startX: 105, endX: 145, height: 180, delay: 0.5, color: "#fbcfe8", type: "tulip" },
   ];
 
   return (
-    <div className="relative flex h-80 w-[420px] items-end justify-center">
+    <div className="relative flex h-96 w-[420px] items-end justify-center">
       
-      {/* Etrafta Uçuşan Sihirli Sarı/Mor Işık Parçacıkları (Görseldeki gibi) */}
-      {Array.from({ length: 20 }).map((_, i) => (
+      {/* Parıltılı Toz Efekti */}
+      {Array.from({ length: 22 }).map((_, i) => (
         <span
           key={i}
-          className="absolute rounded-full"
+          className="absolute rounded-full pointer-events-none"
           style={{
             left: `${5 + Math.random() * 90}%`,
-            bottom: `${10 + Math.random() * 40}%`,
-            width: `${Math.random() * 3 + 1.5}px`,
-            height: `${Math.random() * 3 + 1.5}px`,
-            backgroundColor: i % 2 === 0 ? '#fde047' : '#d8b4fe',
-            animation: `floatDust ${Math.random() * 3 + 2}s infinite ease-out`,
-            animationDelay: `${i * 0.15}s`,
-            boxShadow: i % 2 === 0 ? '0 0 8px #fde047' : '0 0 8px #c084fc'
+            bottom: `${10 + Math.random() * 60}%`,
+            width: `${Math.random() * 3 + 1}px`,
+            height: `${Math.random() * 3 + 1}px`,
+            backgroundColor: i % 3 === 0 ? '#fde047' : '#e9d5ff',
+            animation: `floatDust ${Math.random() * 3 + 2.5}s infinite ease-out`,
+            animationDelay: `${i * 0.12}s`,
+            boxShadow: '0 0 8px rgba(233, 213, 255, 0.8)'
           }}
         />
       ))}
 
-      {/* Zemin Çalıları ve Yaprak Kümeleri (Sol ve Sağ Yanlar) */}
-      <div className="absolute bottom-0 w-full h-32 flex justify-between items-end px-4 pointer-events-none z-10 opacity-90">
-        {/* Sol taraftaki mor/yeşil yaprak kümesi */}
-        <svg width="140" height="90" viewBox="0 0 140 90" className="overflow-visible">
-          <path d="M 10 90 Q 20 40 50 20 Q 20 70 10 90 Z" fill="#7e22ce" opacity="0.8" />
-          <path d="M 30 90 Q 50 30 90 10 Q 50 60 30 90 Z" fill="#9333ea" opacity="0.9" />
-          <path d="M 50 90 Q 70 50 120 30 Q 80 70 50 90 Z" fill="#a855f7" />
-          <path d="M 20 90 Q 10 50 0 30 Q 10 70 20 90 Z" fill="#22c55e" />
-          <path d="M 40 90 Q 30 40 15 15 Q 30 65 40 90 Z" fill="#16a34a" />
-        </svg>
+      {/* Çiçekler ve Zarif Saplar */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 w-[200px] h-[250px] z-20 overflow-visible pointer-events-none">
+        <svg viewBox="0 0 200 250" className="w-full h-full overflow-visible">
+          {stems.map((stem) => {
+            const rootY = 145; // Vazonun boğaz seviyesi
+            const topY = rootY - stem.height + 60;
 
-        {/* Sağ taraftaki uzun otlar ve çalılar */}
-        <svg width="150" height="110" viewBox="0 0 150 110" className="overflow-visible">
-          <path d="M 130 110 Q 120 40 100 0 Q 130 60 130 110 Z" fill="#22c55e" />
-          <path d="M 100 110 Q 90 50 60 10 Q 90 70 100 110 Z" fill="#15803d" />
-          <path d="M 115 110 Q 135 60 150 20 Q 125 70 115 110 Z" fill="#4ade80" />
-          <path d="M 80 110 Q 60 60 40 20 Q 70 70 80 110 Z" fill="#7e22ce" opacity="0.7" />
+            return (
+              <g key={stem.id}>
+                {/* Uzayan Kavisli Sap */}
+                <path
+                  d={`M 100 ${rootY} Q ${(100 + stem.endX)/2} ${rootY - 40} ${stem.endX} ${topY}`}
+                  fill="none"
+                  stroke="#4ade80"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeDasharray={stem.height}
+                  strokeDashoffset={stem.height}
+                  style={{
+                    animation: `growStem 1.2s cubic-bezier(0.4, 0, 0.2, 1) ${stem.delay}фельs forwards`
+                  }}
+                />
+
+                {/* Çiçek Başlığı */}
+                <g 
+                  transform={`translate(${stem.endX}, ${topY})`}
+                  className="scale-0 origin-center"
+                  style={{
+                    animation: `bloomFlower 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) ${stem.delay + 0.9}s forwards`
+                  }}
+                >
+                  {stem.type === "tulip" && (
+                    <>
+                      <path d="M 0 10 Q -15 -10 -10 -25 Q -2 -15 0 0 Z" fill={stem.color} opacity="0.9" />
+                      <path d="M 0 10 Q 15 -10 10 -25 Q 2 -15 0 0 Z" fill={stem.color} opacity="0.9" />
+                      <path d="M 0 12 Q -10 -25 0 -35 Q 10 -25 0 12 Z" fill={stem.color} />
+                    </>
+                  )}
+
+                  {stem.type === "rose" && (
+                    <>
+                      <circle cx="0" cy="0" r="14" fill={stem.color} />
+                      <circle cx="-3" cy="-3" r="10" fill={stem.color} filter="brightness(1.2)" />
+                      <circle cx="2" cy="2" r="7" fill={stem.color} filter="brightness(0.85)" />
+                      <circle cx="0" cy="0" r="3" fill="#fef08a" />
+                    </>
+                  )}
+
+                  {stem.type === "star" && (
+                    <>
+                      <path d="M 0 -16 Q 4 -4 14 0 Q 4 4 0 16 Q -4 4 -14 0 Q -4 -4 0 -16 Z" fill={stem.color} />
+                      <circle cx="0" cy="0" r="4" fill="#fef08a" filter="drop-shadow(0 0 4px #fde047)" />
+                    </>
+                  )}
+                </g>
+              </g>
+            );
+          })}
         </svg>
       </div>
 
-      {/* Ana Çizgiden / Topraktan Büyüyen Menekşeler */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-px h-px z-20 overflow-visible">
-        {mainFlowers.map((flower) => (
-          <div
-            key={flower.id}
-            className="absolute bottom-0 origin-bottom"
-            style={{ 
-              left: `${flower.xOffset}px`,
-              transform: `rotate(${flower.angle}deg)`,
-              height: `${flower.height}px`
-            }}
-          >
-            <svg width="40" height={flower.height} viewBox={`0 0 40 ${flower.height}`} className="overflow-visible">
-              {/* Uzayan Kavisli Sap */}
-              <line
-                x1="20"
-                y1={flower.height}
-                x2="20"
-                y2="25"
-                stroke="#22c55e"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeDasharray={flower.height}
-                strokeDashoffset={flower.height}
-                style={{
-                  animation: `growStem 1.5s cubic-bezier(0.4, 0, 0.2, 1) ${flower.delay}s forwards`
-                }}
-              />
-              
-              {/* Detaylı Menekşe Çiçek Başlığı */}
-              <g 
-                transform="translate(20, 25)" 
-                className="scale-0 origin-center"
-                style={{
-                  animation: `bloomViolet 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) ${flower.delay + 1.2}s forwards`
-                }}
-              >
-                {/* Taç Yapraklar */}
-                <path d="M 0 0 C -14 -20, -20 -6, 0 12 C 20 -6, 14 -20, 0 0 Z" fill={flower.hue} opacity="0.95" />
-                <path d="M 0 0 C -16 3, -12 20, 0 14 C 12 20, 16 3, 0 0 Z" fill={flower.hue} filter="brightness(1.25)" />
-                <path d="M 0 0 C -9 -17, 9 -17, 0 -25 C -9 -17, 9 -17, 0 0 Z" fill={flower.hue} filter="brightness(0.75)" />
-                
-                {/* Parlayan Merkez Polen */}
-                <circle cx="0" cy="0" r="4" fill="#fef08a" filter="drop-shadow(0 0 5px #fde047)" />
-                <circle cx="-1.5" cy="-1" r="1" fill="#ca8a04" />
-                <circle cx="1.5" cy="-1" r="1" fill="#ca8a04" />
-                <circle cx="0" cy="1.5" r="1" fill="#ca8a04" />
-              </g>
-            </svg>
-          </div>
-        ))}
+      {/* Modern Cam Vazo */}
+      <div className="absolute bottom-0 z-30 flex flex-col items-center pointer-events-none">
+        <svg width="130" height="150" viewBox="0 0 130 150" className="overflow-visible drop-shadow-[0_20px_30px_rgba(107,33,168,0.4)]">
+          {/* Vazo İçi Su Efekti */}
+          <path d="M 45 65 Q 65 60 85 65 L 95 135 Q 65 145 35 135 Z" fill="#c084fc" opacity="0.15" />
+
+          {/* Cam Vazo Gövdesi */}
+          <path 
+            d="M 45 50 L 85 50 Q 95 55 98 70 L 108 135 Q 112 145 95 145 L 35 145 Q 18 145 22 135 L 32 70 Q 35 55 45 50 Z" 
+            fill="rgba(255, 255, 255, 0.03)" 
+            stroke="rgba(216, 180, 254, 0.4)" 
+            strokeWidth="2" 
+            strokeLinejoin="round"
+          />
+
+          {/* Vazo Ağzı (Elips) */}
+          <ellipse cx="65" cy="50" rx="20" ry="6" fill="rgba(255, 255, 255, 0.08)" stroke="rgba(216, 180, 254, 0.5)" strokeWidth="1.5" />
+
+          {/* Cam Parlamaları / Yansımalar */}
+          <path d="M 38 75 Q 35 100 42 125" fill="none" stroke="rgba(255, 255, 255, 0.35)" strokeWidth="3" strokeLinecap="round" />
+          <path d="M 92 75 Q 94 95 89 115" fill="none" stroke="rgba(255, 255, 255, 0.15)" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
       </div>
 
     </div>
