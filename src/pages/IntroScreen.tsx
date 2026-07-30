@@ -216,247 +216,137 @@ function GiftBox({
   );
 }
 
-interface FlowerNode {
+interface FlowerBud {
   id: number;
-  baseX: number; // Vazo içindeki çıkış noktası (farklı X koordinatları)
-  tipX: number;  // Çiçek başlığının X konumu
-  tipY: number;  // Çiçek başlığının Y konumu (vazonun hemen ağız hizasında)
-  pathD: string; // Organik kavisli sap yolu
-  pathLength: number;
+  x: number;
+  y: number;
+  size: number;
   delay: number;
-  type: "rose" | "orchid" | "peony" | "tulip";
-  palette: {
-    dark: string;
-    mid: string;
-    light: string;
-    accent: string;
-  };
+  hue: number;
+}
+
+function SimplePurpleFlower({ x, y, size }: { x: number; y: number; size: number }) {
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      {/* Dış taç yaprakları */}
+      {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+        <ellipse
+          key={`outer-${i}`}
+          cx={0}
+          cy={-size * 0.6}
+          rx={size * 0.35}
+          ry={size * 0.55}
+          fill="#c084fc"
+          opacity="0.9"
+          transform={`rotate(${angle})`}
+        />
+      ))}
+      {/* İç taç yaprakları */}
+      {[30, 90, 150, 210, 270, 330].map((angle, i) => (
+        <ellipse
+          key={`inner-${i}`}
+          cx={0}
+          cy={-size * 0.5}
+          rx={size * 0.28}
+          ry={size * 0.45}
+          fill="#d946ef"
+          opacity="0.85"
+          transform={`rotate(${angle})`}
+        />
+      ))}
+      {/* Merkez */}
+      <circle cx="0" cy="0" r={size * 0.25} fill="#a855f7" />
+      <circle cx="0" cy="0" r={size * 0.15} fill="#fef08a" filter="drop-shadow(0 0 3px #d946ef)" />
+    </g>
+  );
 }
 
 function TrueRealisticBouquetScene() {
-  // Mor, Neon Mor ve Violet (Menekşe/Lila/Derin Mor) tonlarında lüks palet
-  const palette = {
-    deepViolet: "#4c1d95",
-    neonPurple: "#a855f7",
-    brightViolet: "#c084fc",
-    electricNeon: "#d946ef",
-    softLavender: "#e9d5ff",
-    darkPlum: "#2e1065"
-  };
-
-  const flowers: FlowerNode[] = [
-    {
-      id: 1,
-      baseX: 95,
-      tipX: 45,
-      tipY: 55,
-      pathD: "M 95 145 C 90 110 65 80 45 55",
-      pathLength: 120,
-      delay: 0.1,
-      type: "rose",
-      palette: { dark: palette.darkPlum, mid: palette.deepViolet, light: palette.neonPurple, accent: palette.softLavender }
-    },
-    {
-      id: 2,
-      baseX: 102,
-      tipX: 72,
-      tipY: 35,
-      pathD: "M 102 145 C 95 105 85 70 72 35",
-      pathLength: 130,
-      delay: 0.25,
-      type: "peony",
-      palette: { dark: palette.deepViolet, mid: palette.neonPurple, light: palette.brightViolet, accent: palette.softLavender }
-    },
-    {
-      id: 3,
-      baseX: 110,
-      tipX: 110,
-      tipY: 20,
-      pathD: "M 110 145 C 110 100 110 60 110 20",
-      pathLength: 125,
-      delay: 0.4,
-      type: "orchid",
-      palette: { dark: palette.darkPlum, mid: palette.electricNeon, light: palette.brightViolet, accent: palette.softLavender }
-    },
-    {
-      id: 4,
-      baseX: 118,
-      tipX: 148,
-      tipY: 42,
-      pathD: "M 118 145 C 125 105 138 72 148 42",
-      pathLength: 135,
-      delay: 0.55,
-      type: "tulip",
-      palette: { dark: palette.deepViolet, mid: palette.brightViolet, light: palette.electricNeon, accent: palette.softLavender }
-    },
-    {
-      id: 5,
-      baseX: 125,
-      tipX: 175,
-      tipY: 65,
-      pathD: "M 125 145 C 135 110 155 82 175 65",
-      pathLength: 140,
-      delay: 0.7,
-      type: "rose",
-      palette: { dark: palette.darkPlum, mid: palette.neonPurple, light: palette.softLavender, accent: palette.electricNeon }
-    }
+  const flowers: FlowerBud[] = [
+    { id: 1, x: 50, y: 30, size: 16, delay: 0.2, hue: 270 },
+    { id: 2, x: 100, y: 10, size: 18, delay: 0.4, hue: 280 },
+    { id: 3, x: 150, y: 40, size: 16, delay: 0.6, hue: 275 },
+    { id: 4, x: 75, y: 60, size: 14, delay: 0.3, hue: 285 },
+    { id: 5, x: 125, y: 75, size: 15, delay: 0.5, hue: 270 },
+    { id: 6, x: 100, y: 85, size: 17, delay: 0.7, hue: 280 },
+    { id: 7, x: 50, y: 110, size: 14, delay: 0.35, hue: 275 },
+    { id: 8, x: 150, y: 100, size: 15, delay: 0.55, hue: 285 },
+    { id: 9, x: 100, y: 130, size: 16, delay: 0.75, hue: 270 },
   ];
 
   return (
     <div 
-      className="relative flex h-[420px] w-[460px] items-end justify-center"
+      className="relative flex flex-col items-center justify-end h-[520px] w-full"
       style={{
         animation: 'bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
       }}
     >
-      
-      {/* Atmosferik Sihirli Işık Parçacıkları */}
-      {Array.from({ length: 28 }).map((_, i) => (
-        <span
-          key={i}
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            left: `${5 + Math.random() * 90}%`,
-            bottom: `${15 + Math.random() * 70}%`,
-            width: `${Math.random() * 3.5 + 1}px`,
-            height: `${Math.random() * 3.5 + 1}px`,
-            backgroundColor: i % 2 === 0 ? '#d946ef' : '#c084fc',
-            animation: `floatDust ${Math.random() * 3 + 2.5}s infinite ease-out`,
-            animationDelay: `${i * 0.1}s`,
-            boxShadow: '0 0 10px rgba(217, 70, 239, 0.9)'
-          }}
-        />
-      ))}
-
-      {/* Çiçekler ve Saplar Katmanı (Vazonun Hemen Üstünde Konumlandırıldı) */}
-      <div className="absolute bottom-[4.5rem] left-1/2 -translate-x-1/2 w-[260px] h-[300px] z-20 overflow-visible pointer-events-none">
-        <svg viewBox="0 0 220 280" className="w-full h-full overflow-visible">
-          <defs>
-            <linearGradient id="stemGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#4ade80" />
-              <stop offset="100%" stopColor="#15803d" />
-            </linearGradient>
-          </defs>
-
-          {flowers.map((fl) => (
-            <g key={fl.id}>
-              {/* Gerçekçi, Doğal Kavisli Sap */}
+      {/* Buket Çiçekleri */}
+      <div className="relative w-80 h-64 mb-8">
+        <svg viewBox="0 0 200 200" className="w-full h-full overflow-visible">
+          {/* Saplar */}
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
+            const rad = (angle * Math.PI) / 180;
+            const x1 = 100 + Math.cos(rad) * 30;
+            const y1 = 100 + Math.sin(rad) * 30;
+            return (
               <path
-                d={fl.pathD}
+                key={`stem-${i}`}
+                d={`M ${x1} ${y1} Q ${100 + Math.cos(rad) * 15} ${50 + Math.sin(rad) * 20} ${100 + Math.cos(rad) * 35} ${20}`}
+                stroke="#2d5016"
+                strokeWidth="2"
                 fill="none"
-                stroke="url(#stemGrad)"
-                strokeWidth="3.2"
                 strokeLinecap="round"
-                strokeDasharray={fl.pathLength}
-                style={{
-                  ['--dash-len' as any]: fl.pathLength,
-                  animation: `stemGrow 1.1s cubic-bezier(0.25, 1, 0.5, 1) ${fl.delay}s forwards`
-                }}
               />
-
-              {/* Çiçek Başı - Kademeli Açılma Animasyonu */}
-              <g 
-                transform={`translate(${fl.tipX}, ${fl.tipY})`}
-                className="scale-0 origin-center"
-                style={{
-                  animation: `bloomStagger 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) ${fl.delay + 0.85}s forwards`
-                }}
-              >
-                {/* 1. ROSS (Gül / Şakayık Tarzı Katmanlı Yapraklar) */}
-                {fl.type === "rose" && (
-                  <g>
-                    <circle cx="0" cy="0" r="24" fill={fl.palette.dark} opacity="0.85" />
-                    <circle cx="0" cy="0" r="19" fill={fl.palette.mid} />
-                    <circle cx="-3" cy="-3" r="14" fill={fl.palette.light} />
-                    <circle cx="2" cy="2" r="9" fill={fl.palette.accent} />
-                    <circle cx="0" cy="0" r="4" fill="#fef08a" filter="drop-shadow(0 0 6px #d946ef)" />
-                  </g>
-                )}
-
-                {/* 2. PEONY (Çok Katmanlı Volümlü Çiçek) */}
-                {fl.type === "peony" && (
-                  <g>
-                    {Array.from({ length: 6 }).map((_, pIdx) => (
-                      <ellipse
-                        key={pIdx}
-                        cx="0"
-                        cy="0"
-                        rx="12"
-                        ry="20"
-                        fill={fl.palette.mid}
-                        transform={`rotate(${pIdx * 60})`}
-                        opacity="0.9"
-                      />
-                    ))}
-                    <circle cx="0" cy="0" r="15" fill={fl.palette.light} />
-                    <circle cx="0" cy="0" r="8" fill={fl.palette.accent} />
-                    <circle cx="0" cy="0" r="3.5" fill="#fef08a" />
-                  </g>
-                )}
-
-                {/* 3. ORCHID (Zarif Neon Menekşe/Orkide) */}
-                {fl.type === "orchid" && (
-                  <g>
-                    <path d="M 0 -22 C -15 -32 -25 -12 0 10 C 25 -12 15 -32 0 -22 Z" fill={fl.palette.light} />
-                    <path d="M -16 -6 C -28 4 -18 24 0 14 C -6 6 -12 0 -16 -6 Z" fill={fl.palette.mid} />
-                    <path d="M 16 -6 C 28 4 18 24 0 14 C 6 6 12 0 16 -6 Z" fill={fl.palette.mid} />
-                    <path d="M 0 -2 C -10 16 0 30 0 30 C 0 30 10 16 0 -2 Z" fill={fl.palette.accent} filter="brightness(1.15)" />
-                    <circle cx="0" cy="3" r="4.5" fill="#fef08a" filter="drop-shadow(0 0 6px #d946ef)" />
-                  </g>
-                )}
-
-                {/* 4. TULIP (Şık Violet Lale) */}
-                {fl.type === "tulip" && (
-                  <g>
-                    <path d="M 0 12 Q -18 -12 -12 -30 Q -2 -18 0 2 Z" fill={fl.palette.dark} />
-                    <path d="M 0 12 Q 18 -12 12 -30 Q 2 -18 0 2 Z" fill={fl.palette.light} />
-                    <path d="M 0 15 Q -12 -28 0 -40 Q 12 -28 0 15 Z" fill={fl.palette.mid} />
-                    <circle cx="0" cy="-10" r="2.5" fill="#fef08a" />
-                  </g>
-                )}
-              </g>
+            );
+          })}
+          
+          {/* Çiçekler */}
+          {flowers.map((flower) => (
+            <g
+              key={flower.id}
+              style={{
+                animation: `bloomStagger 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${flower.delay}s forwards`,
+                transformOrigin: `${flower.x}px ${flower.y}px`
+              }}
+              className="scale-0 origin-center"
+            >
+              <SimplePurpleFlower x={flower.x} y={flower.y} size={flower.size} />
             </g>
           ))}
         </svg>
       </div>
 
-      {/* Lüks Kristal Cam Vazo (Mükemmel Boyut ve Oran) */}
-      <div className="absolute bottom-0 z-30 flex flex-col items-center pointer-events-none">
-        <svg width="150" height="170" viewBox="0 0 150 170" className="overflow-visible drop-shadow-[0_25px_40px_rgba(88,28,135,0.6)]">
-          
-          <defs>
-            <linearGradient id="vialWater" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#c084fc" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#581c87" stopOpacity="0.8" />
-            </linearGradient>
-            <linearGradient id="crystalGlass" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.18)" />
-              <stop offset="40%" stopColor="rgba(216, 180, 254, 0.04)" />
-              <stop offset="100%" stopColor="rgba(255, 255, 255, 0.22)" />
-            </linearGradient>
-          </defs>
-
-          {/* Vazo İçi Su Hacmi */}
-          <path d="M 48 68 Q 75 60 102 68 L 112 152 Q 75 164 38 152 Z" fill="url(#vialWater)" />
-
-          {/* Kristal Cam Vazo Gövdesi */}
-          <path 
-            d="M 48 50 L 102 50 Q 112 58 116 75 L 128 152 Q 132 165 108 165 L 42 165 Q 18 165 22 152 L 34 75 Q 38 58 48 50 Z" 
-            fill="url(#crystalGlass)" 
-            stroke="rgba(233, 213, 255, 0.65)" 
-            strokeWidth="2.5" 
-            strokeLinejoin="round"
-          />
-
-          {/* Vazo Ağzı (Elips Derinlik Efekti) */}
-          <ellipse cx="75" cy="50" rx="27" ry="8" fill="rgba(255, 255, 255, 0.12)" stroke="rgba(233, 213, 255, 0.8)" strokeWidth="2" />
-
-          {/* Gerçekçi Cam Işık Kırılma Yansımaları */}
-          <path d="M 44 80 Q 40 115 50 145" fill="none" stroke="rgba(255, 255, 255, 0.6)" strokeWidth="4" strokeLinecap="round" />
-          <path d="M 108 80 Q 111 110 102 135" fill="none" stroke="rgba(255, 255, 255, 0.25)" strokeWidth="2" strokeLinecap="round" />
-        </svg>
+      {/* "Bu çiçekler sana <3" Yazısı */}
+      <div className="text-center mt-6">
+        <p className="text-xl font-light tracking-widest text-purple-200">
+          bu çiçekler sana
+        </p>
+        <p className="text-5xl font-light text-pink-300 mt-2" style={{ letterSpacing: '0.1em' }}>
+          &lt;3
+        </p>
       </div>
 
+      {/* Parıltılı Atmosfer Parçacıkları */}
+      {Array.from({ length: 20 }).map((_, i) => (
+        <span
+          key={i}
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 80}%`,
+            width: `${Math.random() * 3 + 1}px`,
+            height: `${Math.random() * 3 + 1}px`,
+            backgroundColor: i % 2 === 0 ? '#d946ef' : '#c084fc',
+            animation: `floatDust ${Math.random() * 3 + 2}s infinite ease-out`,
+            animationDelay: `${i * 0.1}s`,
+            boxShadow: '0 0 8px rgba(217, 70, 239, 0.8)'
+          }}
+        />
+      ))}
+    </div>
+        </svg>
+      </div>
     </div>
   );
 }
