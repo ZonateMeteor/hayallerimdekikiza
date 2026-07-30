@@ -58,6 +58,23 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
           0%, 100% { transform: scale(1); opacity: 0.2; }
           50% { transform: scale(1.2); opacity: 0.35; }
         }
+         @keyframes bouquetSpinEntry {
+           0% { 
+             opacity: 0; 
+             transform: scale(0.3) rotateY(-90deg) rotateZ(-45deg) translateY(80px);
+             filter: blur(10px) brightness(0.5);
+           }
+           40% {
+             opacity: 0.9;
+             transform: scale(1.05) rotateY(15deg) rotateZ(-10deg) translateY(-10px);
+             filter: blur(2px);
+           }
+           100% { 
+             opacity: 1; 
+             transform: scale(1) rotateY(0deg) rotateZ(0deg) translateY(0);
+             filter: blur(0) brightness(1);
+           }
+         }
       `}</style>
 
       <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#05030a] px-6 font-sans text-white">
@@ -286,7 +303,12 @@ function TrueRealisticBouquetScene() {
   ];
 
   return (
-    <div className="relative flex h-[420px] w-[460px] items-end justify-center">
+    <div 
+      className="relative flex h-[420px] w-[460px] items-end justify-center"
+      style={{
+        animation: 'bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
+      }}
+    >
       
       {/* Atmosferik Sihirli Işık Parçacıkları */}
       {Array.from({ length: 28 }).map((_, i) => (
