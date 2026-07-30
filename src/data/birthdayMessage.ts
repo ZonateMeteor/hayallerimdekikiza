@@ -5,7 +5,7 @@
 // İstediğin kadar satır ekleyebilir, metni değiştirebilirsin.
 
 // Hediyenin ve mesajın gösterileceği kişinin ismi:
-export const recipientName: string = "isim";
+export const recipientName: string = "Jinda";
 
 export const birthdayMessage: string = `Doğum günün kutlu olsun!
 
