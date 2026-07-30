@@ -115,11 +115,11 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
         {stage === "gift" && (
           <div className="relative z-10 flex flex-col items-center gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700">
             <p className="text-purple-300 text-sm font-semibold uppercase tracking-[0.4em]">
-              sana ufak bir hediyem var
+              sana ufak bir hediyem varrrr
             </p>
             <p className="text-4xl font-extralight tracking-widest text-purple-100">{recipientName}</p>
             <GiftBox clicks={clicks} total={totalClicks} opening={false} onClick={handleGiftClick} />
-            <p className="text-purple-300 text-xs tracking-widest opacity-70">Sihri uyandırmak için dokun</p>
+            <p className="text-purple-300 text-xs tracking-widest opacity-70">Kutuyu açmak için dokun</p>
           </div>
         )}
 
@@ -344,9 +344,6 @@ function TrueRealisticBouquetScene() {
           }}
         />
       ))}
-    </div>
-        </svg>
-      </div>
     </div>
   );
 }
