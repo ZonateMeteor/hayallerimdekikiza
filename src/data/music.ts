@@ -19,9 +19,9 @@ export interface MusicTrack {
 export const musicTracks: MusicTrack[] = [
   {
     id: "muzik-1",
-    name: "Sarki 1",
-    artist: "Örnek Sanatçı",
-    description: "Bu müzik için açıklama buraya gelecek. Dosyadaki bu yazıyı değiştir.",
+    name: "Dragon Eyes",
+    artist: "Adrianne Lenker",
+    description: "I just want a place with you..",
     file: "sarki1.mp3",
     cover: "sarki1.svg",
   },
