@@ -23,7 +23,7 @@ export const musicTracks: MusicTrack[] = [
     artist: "Adrianne Lenker",
     description: "I just want a place with you..",
     file: "sarki1.mp3",
-    cover: "sarki1.svg",
+    cover: "sarki1.webp",
   },
   {
     id: "muzik-2",
