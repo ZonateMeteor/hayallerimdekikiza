@@ -4,11 +4,12 @@ import { Menu } from "lucide-react";
 
 interface IntroScreenProps {
   onOpenMenu: () => void;
+  onStartMusic: () => void;
 }
 
 type Stage = "hello" | "gift" | "opening" | "flowers" | "message";
 
-export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
+export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
   const [stage, setStage] = useState<Stage>("hello");
   const [clicks, setClicks] = useState(0);
   const totalClicks = 7;
@@ -79,7 +80,6 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
 
       <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#05030a] px-6 font-sans text-white">
         
-        {/* Arka Plan Atmosferik Işıklar */}
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
           <div 
             className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[35rem] w-[35rem] rounded-full bg-purple-900/20 blur-[140px]"
@@ -99,7 +99,10 @@ export function IntroScreen({ onOpenMenu }: IntroScreenProps) {
         {stage === "hello" && (
           <div className="relative z-10 flex flex-col items-center gap-8 animate-in fade-in zoom-in duration-1000">
             <button
-              onClick={() => setStage("gift")}
+              onClick={() => {
+                setStage("gift");
+                onStartMusic();
+              }}
               className="text-5xl font-light tracking-[0.2em] text-transparent sm:text-7xl transition-all duration-700 hover:tracking-[0.3em] hover:scale-105"
               style={{ 
                 background: "linear-gradient(to right, #e9d5ff, #f3e8ff, #c084fc)", 
@@ -228,7 +231,6 @@ interface FlowerBud {
 function SimplePurpleFlower({ x, y, size }: { x: number; y: number; size: number }) {
   return (
     <g transform={`translate(${x}, ${y})`}>
-      {/* Dış taç yaprakları */}
       {[0, 60, 120, 180, 240, 300].map((angle, i) => (
         <ellipse
           key={`outer-${i}`}
@@ -241,7 +243,6 @@ function SimplePurpleFlower({ x, y, size }: { x: number; y: number; size: number
           transform={`rotate(${angle})`}
         />
       ))}
-      {/* İç taç yaprakları */}
       {[30, 90, 150, 210, 270, 330].map((angle, i) => (
         <ellipse
           key={`inner-${i}`}
@@ -254,7 +255,6 @@ function SimplePurpleFlower({ x, y, size }: { x: number; y: number; size: number
           transform={`rotate(${angle})`}
         />
       ))}
-      {/* Merkez */}
       <circle cx="0" cy="0" r={size * 0.25} fill="#a855f7" />
       <circle cx="0" cy="0" r={size * 0.15} fill="#fef08a" filter="drop-shadow(0 0 3px #d946ef)" />
     </g>
@@ -281,10 +281,8 @@ function TrueRealisticBouquetScene() {
         animation: 'bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
       }}
     >
-      {/* Buket Çiçekleri */}
       <div className="relative w-80 h-64 mb-8">
         <svg viewBox="0 0 200 200" className="w-full h-full overflow-visible">
-          {/* Saplar */}
           {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
             const rad = (angle * Math.PI) / 180;
             const x1 = 100 + Math.cos(rad) * 30;
@@ -301,7 +299,6 @@ function TrueRealisticBouquetScene() {
             );
           })}
           
-          {/* Çiçekler */}
           {flowers.map((flower) => (
             <g
               key={flower.id}
@@ -317,7 +314,6 @@ function TrueRealisticBouquetScene() {
         </svg>
       </div>
 
-      {/* "Bu çiçekler sana <3" Yazısı */}
       <div className="text-center mt-6">
         <p className="text-xl font-light tracking-widest text-purple-200">
           bu çiçekler sana
@@ -327,7 +323,6 @@ function TrueRealisticBouquetScene() {
         </p>
       </div>
 
-      {/* Parıltılı Atmosfer Parçacıkları */}
       {Array.from({ length: 20 }).map((_, i) => (
         <span
           key={i}

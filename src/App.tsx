@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { MenuDrawer, type Route } from "./components/MenuDrawer";
 import { IntroScreen } from "./pages/IntroScreen";
 import { PoemsPage } from "./pages/PoemsPage";
@@ -15,6 +15,11 @@ export default function App() {
   const [route, setRoute] = useState<Route>("home");
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Müzik için gerekli state ve referanslar
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [currentMusic, setCurrentMusic] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
   const currentTheme = useMemo(() => {
     const id = getStoredThemeId() ?? defaultThemeId;
     return themes.find((t) => t.id === id) ?? themes[0];
@@ -24,7 +29,6 @@ export default function App() {
     applyTheme(currentTheme);
   }, [currentTheme]);
 
-  // Tema değişimi olayını dinle (ThemesPage'ten gelir)
   useEffect(() => {
     const handler = () => {
       const id = getStoredThemeId() ?? defaultThemeId;
@@ -34,6 +38,27 @@ export default function App() {
     window.addEventListener("theme-changed", handler);
     return () => window.removeEventListener("theme-changed", handler);
   }, []);
+
+  // Müzik Oynatma Fonksiyonu
+  const playGlobalMusic = (fileName: string) => {
+    if (!audioRef.current) return;
+    
+    if (currentMusic === fileName) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current.play().catch(() => {});
+        setIsPlaying(true);
+      }
+      return;
+    }
+
+    audioRef.current.src = `/muzik/muzikler/${fileName}`;
+    audioRef.current.play().catch(() => {});
+    setCurrentMusic(fileName);
+    setIsPlaying(true);
+  };
 
   function go(r: Route) {
     setRoute(r);
@@ -45,6 +70,14 @@ export default function App() {
 
   return (
     <div className="app-bg min-h-screen">
+      {/* Gizli Audio Etiketi */}
+      <audio 
+        ref={audioRef} 
+        onEnded={() => setIsPlaying(false)}
+        onPause={() => setIsPlaying(false)}
+        onPlay={() => setIsPlaying(true)}
+      />
+
       <MenuDrawer
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
@@ -52,11 +85,26 @@ export default function App() {
         current={route}
       />
 
-      {route === "home" && <IntroScreen onOpenMenu={() => setMenuOpen(true)} />}
+      {route === "home" && (
+        <IntroScreen 
+          onOpenMenu={() => setMenuOpen(true)} 
+          onStartMusic={() => playGlobalMusic("sarki1.mp3")} 
+        />
+      )}
+      
       {route === "poems" && <PoemsPage onBack={back} />}
       {route === "confessions" && <ConfessionsPage onBack={back} />}
       {route === "memories" && <MemoriesPage onBack={back} />}
-      {route === "music" && <MusicPage onBack={back} />}
+      
+      {route === "music" && (
+        <MusicPage 
+          onBack={back} 
+          globalPlayMusic={playGlobalMusic}
+          currentGlobalMusic={currentMusic}
+          isGlobalPlaying={isPlaying}
+        />
+      )}
+      
       {route === "games" && <GamesPage onBack={back} />}
       {route === "feedback" && <FeedbackPage onBack={back} />}
       {route === "themes" && <ThemesPage onBack={back} />}
