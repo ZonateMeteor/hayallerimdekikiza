@@ -26,14 +26,14 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
   return (
     <>
       <style>{`
-        @keyframes stemGrow { 
+        @keyframes stemGrow {
           0% { stroke-dashoffset: var(--dash-len); opacity: 0; }
           100% { stroke-dashoffset: 0; opacity: 1; }
         }
-        @keyframes bloomStagger { 
-          0% { transform: scale(0) rotate(-20deg); opacity: 0; filter: drop-shadow(0 0 0px rgba(168,85,247,0)); }
-          70% { transform: scale(1.12) rotate(4deg); opacity: 1; filter: drop-shadow(0 0 15px rgba(192,132,252,0.8)); }
-          100% { transform: scale(1) rotate(0deg); opacity: 1; filter: drop-shadow(0 0 10px rgba(147,51,234,0.4)); }
+        @keyframes bloomStagger {
+          0% { transform: scale(0) rotate(-18deg); opacity: 0; filter: blur(6px) drop-shadow(0 0 0px rgba(168,85,247,0)); }
+          68% { transform: scale(1.08) rotate(4deg); opacity: 1; filter: blur(0px) drop-shadow(0 0 18px rgba(192,132,252,0.75)); }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0px) drop-shadow(0 0 10px rgba(147,51,234,0.35)); }
         }
         @keyframes floatDust {
           0% { transform: translateY(0) scale(1); opacity: 0; }
@@ -59,38 +59,41 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
           0%, 100% { transform: scale(1); opacity: 0.2; }
           50% { transform: scale(1.2); opacity: 0.35; }
         }
-         @keyframes bouquetSpinEntry {
-           0% { 
-             opacity: 0; 
-             transform: scale(0.3) rotateY(-90deg) rotateZ(-45deg) translateY(80px);
-             filter: blur(10px) brightness(0.5);
-           }
-           40% {
-             opacity: 0.9;
-             transform: scale(1.05) rotateY(15deg) rotateZ(-10deg) translateY(-10px);
-             filter: blur(2px);
-           }
-           100% { 
-             opacity: 1; 
-             transform: scale(1) rotateY(0deg) rotateZ(0deg) translateY(0);
-             filter: blur(0) brightness(1);
-           }
-         }
+        @keyframes bouquetSpinEntry {
+          0% {
+            opacity: 0;
+            transform: scale(0.3) rotateY(-90deg) rotateZ(-35deg) translateY(80px);
+            filter: blur(10px) brightness(0.5);
+          }
+          40% {
+            opacity: 0.95;
+            transform: scale(1.05) rotateY(12deg) rotateZ(-8deg) translateY(-10px);
+            filter: blur(2px);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1) rotateY(0deg) rotateZ(0deg) translateY(0);
+            filter: blur(0) brightness(1);
+          }
+        }
+        @keyframes petalFloat {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-5px) rotate(2deg); }
+        }
       `}</style>
 
       <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#05030a] px-6 font-sans text-white">
-        
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-          <div 
-            className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[35rem] w-[35rem] rounded-full bg-purple-900/20 blur-[140px]"
-            style={{ animation: 'ambientGlow 8s infinite ease-in-out' }}
+          <div
+            className="absolute top-1/4 left-1/2 h-[35rem] w-[35rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-purple-900/20 blur-[140px]"
+            style={{ animation: "ambientGlow 8s infinite ease-in-out" }}
           />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#05030a]/80 to-[#05030a]" />
         </div>
 
         <button
           onClick={onOpenMenu}
-          className="fixed left-4 top-4 z-30 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-md transition-all hover:bg-white/10 hover:scale-105"
+          className="fixed left-4 top-4 z-30 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-md transition-all hover:scale-105 hover:bg-white/10"
           aria-label="Menüyü aç"
         >
           <Menu size={24} className="text-purple-200" />
@@ -103,11 +106,11 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
                 setStage("gift");
                 onStartMusic();
               }}
-              className="text-5xl font-light tracking-[0.2em] text-transparent sm:text-7xl transition-all duration-700 hover:tracking-[0.3em] hover:scale-105"
-              style={{ 
-                background: "linear-gradient(to right, #e9d5ff, #f3e8ff, #c084fc)", 
+              className="text-5xl font-light tracking-[0.2em] text-transparent transition-all duration-700 hover:scale-105 hover:tracking-[0.3em] sm:text-7xl"
+              style={{
+                background: "linear-gradient(to right, #e9d5ff, #f3e8ff, #c084fc)",
                 WebkitBackgroundClip: "text",
-                textShadow: "0 0 50px rgba(216, 180, 254, 0.5)"
+                textShadow: "0 0 50px rgba(216, 180, 254, 0.5)",
               }}
             >
               merhaba...
@@ -117,12 +120,12 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
 
         {stage === "gift" && (
           <div className="relative z-10 flex flex-col items-center gap-8 animate-in slide-in-from-bottom-8 fade-in duration-700">
-            <p className="text-purple-300 text-sm font-semibold uppercase tracking-[0.4em]">
+            <p className="text-sm font-semibold uppercase tracking-[0.4em] text-purple-300">
               sana ufak bir hediyem varrrr
             </p>
             <p className="text-4xl font-extralight tracking-widest text-purple-100">{recipientName}</p>
             <GiftBox clicks={clicks} total={totalClicks} opening={false} onClick={handleGiftClick} />
-            <p className="text-purple-300 text-xs tracking-widest opacity-70">Kutuyu açmak için dokun</p>
+            <p className="text-xs tracking-widest text-purple-300 opacity-70">Kutuyu açmak için dokun</p>
           </div>
         )}
 
@@ -135,11 +138,11 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
 
         {stage === "flowers" && (
           <div className="relative z-10 flex flex-col items-center gap-6 animate-in fade-in duration-1000">
-            <TrueRealisticBouquetScene />
-            <p className="text-4xl font-extralight tracking-widest text-purple-100 mt-2">{recipientName}</p>
+            <BouquetScene />
+            <p className="mt-2 text-4xl font-extralight tracking-widest text-purple-100">{recipientName}</p>
             <button
               onClick={() => setStage("message")}
-              className="group relative overflow-hidden rounded-full border border-purple-400/30 bg-purple-900/20 px-12 py-4 text-sm font-bold tracking-[0.3em] text-purple-100 backdrop-blur-md transition-all hover:bg-purple-800/40 hover:border-purple-400/60 shadow-[0_0_30px_rgba(147,51,234,0.3)]"
+              className="group relative overflow-hidden rounded-full border border-purple-400/30 bg-purple-900/20 px-12 py-4 text-sm font-bold tracking-[0.3em] text-purple-100 backdrop-blur-md transition-all hover:border-purple-400/60 hover:bg-purple-800/40 shadow-[0_0_30px_rgba(147,51,234,0.3)]"
             >
               <span className="relative z-10">DEVAM ET</span>
               <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-purple-400/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
@@ -148,7 +151,7 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
         )}
 
         {stage === "message" && (
-          <div className="relative z-10 max-w-xl rounded-[2.5rem] border border-white/10 bg-white/[0.03] p-8 text-center shadow-[0_0_60px_rgba(88,28,135,0.4)] backdrop-blur-2xl sm:p-12 animate-in slide-in-from-bottom-10 fade-in duration-1000">
+          <div className="relative z-10 max-w-xl rounded-[2.5rem] border border-white/10 bg-white/[0.03] p-8 text-center shadow-[0_0_60px_rgba(88,28,135,0.4)] backdrop-blur-2xl animate-in slide-in-from-bottom-10 fade-in duration-1000 sm:p-12">
             <p className="whitespace-pre-line text-xl font-light leading-loose text-purple-50">{birthdayMessage}</p>
             <div className="mx-auto mt-8 h-px w-24 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
             <p className="mt-8 text-xs font-semibold tracking-widest text-purple-400/60">
@@ -178,164 +181,162 @@ function GiftBox({
     <button
       onClick={onClick}
       className="relative z-20 flex h-56 w-56 items-center justify-center transition-transform active:scale-95"
-      style={{
-        animation: isShaking ? 'boxShake 0.4s ease-in-out' : 'none',
-      }}
+      style={{ animation: isShaking ? "boxShake 0.4s ease-in-out" : "none" }}
       aria-label="Hediye kutusu"
     >
-      <div 
-        className={`w-full h-full ${opening ? 'pointer-events-none' : ''}`} 
-        style={{ animation: opening ? 'boxFade 0.8s forwards 0.3s' : 'none' }}
-      >
-        <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-[0_15px_35px_rgba(147,51,234,0.6)]">
-           <circle cx="100" cy="110" r="75" fill="#a855f7" opacity={0.05 + (clicks * 0.12)} className="transition-opacity duration-300" />
-           <path d="M 40 85 L 160 85 L 145 160 L 55 160 Z" fill="#1e1b4b" stroke="#c084fc" strokeWidth="2" />
-           <path d="M 40 85 L 100 120 L 160 85" fill="none" stroke="#c084fc" strokeWidth="1.5" opacity="0.6" />
-           <path d="M 100 120 L 100 160" fill="none" stroke="#c084fc" strokeWidth="1.5" opacity="0.6" />
-           
-           <g style={{ animation: opening ? 'lidFly 1s forwards cubic-bezier(0.16, 1, 0.3, 1)' : 'none', transformOrigin: 'center' }}>
-             <path d="M 25 65 Q 100 30 175 65 L 160 85 L 40 85 Z" fill="#3b0764" stroke="#d8b4fe" strokeWidth="2" />
-             <polygon points="100,65 115,80 100,95 85,80" fill="#f3e8ff" />
-             <polygon points="100,70 110,80 100,90 90,80" fill="#a855f7" className="animate-pulse" />
-           </g>
-
-           {clicks > 0 && !opening && (
-             <circle cx="100" cy="80" r={20 + (clicks * 7)} fill="none" stroke="#e9d5ff" strokeWidth="1.5" opacity="0.6" className="animate-ping" />
-           )}
+      <div className={`h-full w-full ${opening ? "pointer-events-none" : ""}`} style={{ animation: opening ? "boxFade 0.8s forwards 0.3s" : "none" }}>
+        <svg viewBox="0 0 200 200" className="h-full w-full drop-shadow-[0_15px_35px_rgba(147,51,234,0.6)]">
+          <circle cx="100" cy="110" r="75" fill="#a855f7" opacity={0.05 + clicks * 0.12} className="transition-opacity duration-300" />
+          <path d="M 40 85 L 160 85 L 145 160 L 55 160 Z" fill="#1e1b4b" stroke="#c084fc" strokeWidth="2" />
+          <path d="M 40 85 L 100 120 L 160 85" fill="none" stroke="#c084fc" strokeWidth="1.5" opacity="0.6" />
+          <path d="M 100 120 L 100 160" fill="none" stroke="#c084fc" strokeWidth="1.5" opacity="0.6" />
+          <g style={{ animation: opening ? "lidFly 1s forwards cubic-bezier(0.16, 1, 0.3, 1)" : "none", transformOrigin: "center" }}>
+            <path d="M 25 65 Q 100 30 175 65 L 160 85 L 40 85 Z" fill="#3b0764" stroke="#d8b4fe" strokeWidth="2" />
+            <polygon points="100,65 115,80 100,95 85,80" fill="#f3e8ff" />
+            <polygon points="100,70 110,80 100,90 90,80" fill="#a855f7" className="animate-pulse" />
+          </g>
+          {clicks > 0 && !opening && <circle cx="100" cy="80" r={20 + clicks * 7} fill="none" stroke="#e9d5ff" strokeWidth="1.5" opacity="0.6" className="animate-ping" />}
         </svg>
       </div>
-      
+
       {!opening && clicks > 0 && clicks < total && (
         <div className="absolute -bottom-8 flex gap-3">
-           {Array.from({ length: total }).map((_, i) => (
-             <div 
-               key={i} 
-               className={`h-2.5 w-2.5 rotate-45 transition-all duration-500 ${i < clicks ? 'bg-purple-300 shadow-[0_0_12px_#d8b4fe] scale-125' : 'bg-white/10 scale-100 border border-white/20'}`} 
-             />
-           ))}
+          {Array.from({ length: total }).map((_, i) => (
+            <div
+              key={i}
+              className={`h-2.5 w-2.5 rotate-45 transition-all duration-500 ${i < clicks ? "scale-125 bg-purple-300 shadow-[0_0_12px_#d8b4fe]" : "scale-100 border border-white/20 bg-white/10"}`}
+            />
+          ))}
         </div>
       )}
     </button>
   );
 }
 
-interface FlowerBud {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  delay: number;
-  hue: number;
-}
+function BouquetScene() {
+  const petals = [
+    { x: 100, y: 45, s: 1.0, c: "#7c3aed", r: 0 },
+    { x: 78, y: 58, s: 0.95, c: "#a855f7", r: -18 },
+    { x: 122, y: 58, s: 0.95, c: "#9333ea", r: 18 },
+    { x: 58, y: 78, s: 0.88, c: "#c084fc", r: -28 },
+    { x: 142, y: 78, s: 0.88, c: "#d946ef", r: 28 },
+    { x: 90, y: 82, s: 0.72, c: "#8b5cf6", r: -8 },
+    { x: 110, y: 82, s: 0.72, c: "#ec4899", r: 8 },
+    { x: 72, y: 102, s: 0.8, c: "#6d28d9", r: -22 },
+    { x: 128, y: 102, s: 0.8, c: "#8b5cf6", r: 22 },
+    { x: 50, y: 108, s: 0.72, c: "#a855f7", r: -34 },
+    { x: 150, y: 108, s: 0.72, c: "#d946ef", r: 34 },
+    { x: 100, y: 118, s: 0.92, c: "#7c3aed", r: 0 },
+  ];
 
-function SimplePurpleFlower({ x, y, size }: { x: number; y: number; size: number }) {
-  return (
-    <g transform={`translate(${x}, ${y})`}>
-      {[0, 60, 120, 180, 240, 300].map((angle, i) => (
-        <ellipse
-          key={`outer-${i}`}
-          cx={0}
-          cy={-size * 0.6}
-          rx={size * 0.35}
-          ry={size * 0.55}
-          fill="#c084fc"
-          opacity="0.9"
-          transform={`rotate(${angle})`}
-        />
-      ))}
-      {[30, 90, 150, 210, 270, 330].map((angle, i) => (
-        <ellipse
-          key={`inner-${i}`}
-          cx={0}
-          cy={-size * 0.5}
-          rx={size * 0.28}
-          ry={size * 0.45}
-          fill="#d946ef"
-          opacity="0.85"
-          transform={`rotate(${angle})`}
-        />
-      ))}
-      <circle cx="0" cy="0" r={size * 0.25} fill="#a855f7" />
-      <circle cx="0" cy="0" r={size * 0.15} fill="#fef08a" filter="drop-shadow(0 0 3px #d946ef)" />
-    </g>
-  );
-}
+  const leaves = [
+    { x: 48, y: 150, s: 1, r: -28 },
+    { x: 70, y: 165, s: 1.15, r: -10 },
+    { x: 132, y: 164, s: 1.15, r: 12 },
+    { x: 154, y: 150, s: 1, r: 30 },
+  ];
 
-function TrueRealisticBouquetScene() {
-  const flowers: FlowerBud[] = [
-    { id: 1, x: 50, y: 30, size: 16, delay: 0.2, hue: 270 },
-    { id: 2, x: 100, y: 10, size: 18, delay: 0.4, hue: 280 },
-    { id: 3, x: 150, y: 40, size: 16, delay: 0.6, hue: 275 },
-    { id: 4, x: 75, y: 60, size: 14, delay: 0.3, hue: 285 },
-    { id: 5, x: 125, y: 75, size: 15, delay: 0.5, hue: 270 },
-    { id: 6, x: 100, y: 85, size: 17, delay: 0.7, hue: 280 },
-    { id: 7, x: 50, y: 110, size: 14, delay: 0.35, hue: 275 },
-    { id: 8, x: 150, y: 100, size: 15, delay: 0.55, hue: 285 },
-    { id: 9, x: 100, y: 130, size: 16, delay: 0.75, hue: 270 },
+  const stems = [
+    { x1: 95, y1: 178, x2: 76, y2: 88 },
+    { x1: 100, y1: 180, x2: 95, y2: 86 },
+    { x1: 106, y1: 178, x2: 122, y2: 90 },
+    { x1: 88, y1: 176, x2: 58, y2: 98 },
+    { x1: 114, y1: 176, x2: 144, y2: 98 },
   ];
 
   return (
-    <div 
-      className="relative flex flex-col items-center justify-end h-[520px] w-full"
-      style={{
-        animation: 'bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards'
-      }}
-    >
-      <div className="relative w-80 h-64 mb-8">
-        <svg viewBox="0 0 200 200" className="w-full h-full overflow-visible">
-          {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
-            const rad = (angle * Math.PI) / 180;
-            const x1 = 100 + Math.cos(rad) * 30;
-            const y1 = 100 + Math.sin(rad) * 30;
-            return (
-              <path
-                key={`stem-${i}`}
-                d={`M ${x1} ${y1} Q ${100 + Math.cos(rad) * 15} ${50 + Math.sin(rad) * 20} ${100 + Math.cos(rad) * 35} ${20}`}
-                stroke="#2d5016"
-                strokeWidth="2"
-                fill="none"
-                strokeLinecap="round"
-              />
-            );
-          })}
-          
-          {flowers.map((flower) => (
-            <g
-              key={flower.id}
-              style={{
-                animation: `bloomStagger 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${flower.delay}s forwards`,
-                transformOrigin: `${flower.x}px ${flower.y}px`
-              }}
-              className="scale-0 origin-center"
-            >
-              <SimplePurpleFlower x={flower.x} y={flower.y} size={flower.size} />
+    <div className="relative flex h-[560px] w-full flex-col items-center justify-end" style={{ animation: "bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" }}>
+      <div className="relative mb-5 h-[420px] w-[360px]">
+        <svg viewBox="0 0 200 220" className="h-full w-full overflow-visible">
+          <defs>
+            <radialGradient id="petalGlow" cx="50%" cy="35%" r="70%">
+              <stop offset="0%" stopColor="#f5d0fe" stopOpacity="0.95" />
+              <stop offset="45%" stopColor="#c084fc" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#6d28d9" stopOpacity="1" />
+            </radialGradient>
+            <radialGradient id="centerGlow" cx="40%" cy="35%" r="70%">
+              <stop offset="0%" stopColor="#fef08a" stopOpacity="1" />
+              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.85" />
+            </radialGradient>
+            <linearGradient id="wrapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#2e1065" />
+              <stop offset="55%" stopColor="#5b21b6" />
+              <stop offset="100%" stopColor="#0f172a" />
+            </linearGradient>
+            <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#86efac" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#14532d" stopOpacity="1" />
+            </linearGradient>
+          </defs>
+
+          <ellipse cx="100" cy="196" rx="54" ry="10" fill="#0f172a" opacity="0.45" />
+
+          {stems.map((stem, i) => (
+            <path
+              key={i}
+              d={`M ${stem.x1} ${stem.y1} C ${stem.x1 - 10} ${stem.y1 - 32}, ${stem.x2 + 8} ${stem.y2 - 34}, ${stem.x2} ${stem.y2}`}
+              stroke="#2f6b2f"
+              strokeWidth="3.2"
+              strokeLinecap="round"
+              fill="none"
+              style={{ strokeDasharray: 1, strokeDashoffset: 0 }}
+            />
+          ))}
+
+          {leaves.map((leaf, i) => (
+            <g key={i} transform={`translate(${leaf.x}, ${leaf.y}) rotate(${leaf.r}) scale(${leaf.s})`} style={{ animation: `petalFloat 5s ease-in-out ${i * 0.35}s infinite` }}>
+              <path d="M 0 0 C 18 -10, 28 8, 12 24 C 0 30, -12 22, -14 10 C -15 2, -8 -3, 0 0 Z" fill="url(#leafGrad)" opacity="0.95" />
+              <path d="M -2 2 C 8 8, 12 14, 12 22" stroke="#d1fae5" strokeWidth="1.1" opacity="0.35" fill="none" />
+            </g>
+          ))}
+
+          <path d="M 46 152 C 68 180, 132 180, 154 152 L 144 194 L 56 194 Z" fill="url(#wrapGrad)" opacity="0.95" />
+          <path d="M 56 194 C 74 182, 126 182, 144 194 L 138 206 L 62 206 Z" fill="#1e1b4b" opacity="0.95" />
+          <path d="M 58 194 L 100 160 L 142 194" fill="none" stroke="#d8b4fe" strokeWidth="1.4" opacity="0.45" />
+          <path d="M 64 188 C 80 174, 120 174, 136 188" fill="none" stroke="#c084fc" strokeWidth="1" opacity="0.35" />
+
+          {petals.map((petal, i) => (
+            <g key={i} transform={`translate(${petal.x}, ${petal.y}) scale(${petal.s}) rotate(${petal.r})`} style={{ animation: `bloomStagger 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 0.08}s forwards` }} className="origin-center scale-0">
+              <path d="M 0 -18 C 12 -20, 20 -6, 16 8 C 12 22, 0 26, 0 26 C 0 26, -12 22, -16 8 C -20 -6, -12 -20, 0 -18 Z" fill={petal.c} opacity="0.96" />
+              <path d="M 0 -14 C 7 -15, 11 -5, 8 6 C 6 15, 0 18, 0 18 C 0 18, -6 15, -8 6 C -11 -5, -7 -15, 0 -14 Z" fill="#f5d0fe" opacity="0.18" />
+            </g>
+          ))}
+
+          {[
+            { x: 100, y: 46, s: 1.1 },
+            { x: 82, y: 62, s: 0.82 },
+            { x: 118, y: 62, s: 0.82 },
+            { x: 64, y: 84, s: 0.74 },
+            { x: 136, y: 84, s: 0.74 },
+            { x: 100, y: 88, s: 0.68 },
+            { x: 100, y: 116, s: 0.88 },
+          ].map((b, i) => (
+            <g key={`center-${i}`} transform={`translate(${b.x}, ${b.y}) scale(${b.s})`}>
+              <circle cx="0" cy="0" r="8" fill="url(#centerGlow)" />
+              <circle cx="0" cy="0" r="3" fill="#7c2d12" opacity="0.4" />
             </g>
           ))}
         </svg>
       </div>
 
-      <div className="text-center mt-6">
-        <p className="text-xl font-light tracking-widest text-purple-200">
-          bu çiçekler sana
-        </p>
-        <p className="text-5xl font-light text-pink-300 mt-2" style={{ letterSpacing: '0.1em' }}>
-          &lt;3
-        </p>
+      <div className="text-center">
+        <p className="text-xl font-light tracking-[0.35em] text-purple-200">BU ÇİÇEKLER SANA</p>
+        <p className="mt-2 text-5xl font-light tracking-[0.2em] text-pink-300">&lt;3</p>
       </div>
 
-      {Array.from({ length: 20 }).map((_, i) => (
+      {Array.from({ length: 24 }).map((_, i) => (
         <span
           key={i}
-          className="absolute rounded-full pointer-events-none"
+          className="pointer-events-none absolute rounded-full"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 80}%`,
-            width: `${Math.random() * 3 + 1}px`,
-            height: `${Math.random() * 3 + 1}px`,
-            backgroundColor: i % 2 === 0 ? '#d946ef' : '#c084fc',
-            animation: `floatDust ${Math.random() * 3 + 2}s infinite ease-out`,
-            animationDelay: `${i * 0.1}s`,
-            boxShadow: '0 0 8px rgba(217, 70, 239, 0.8)'
+            left: `${(i * 17) % 100}%`,
+            top: `${(i * 11) % 78}%`,
+            width: `${(i % 3) + 1}px`,
+            height: `${(i % 3) + 1}px`,
+            backgroundColor: i % 2 === 0 ? "#d946ef" : "#c084fc",
+            animation: `floatDust ${2.6 + (i % 5) * 0.4}s infinite ease-out`,
+            animationDelay: `${i * 0.09}s`,
+            boxShadow: "0 0 8px rgba(217, 70, 239, 0.8)",
           }}
         />
       ))}
