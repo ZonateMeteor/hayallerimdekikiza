@@ -21,17 +21,17 @@ export const musicTracks: MusicTrack[] = [
     id: "muzik-1",
     name: "Dragon Eyes",
     artist: "Adrianne Lenker",
-    description: "I just want a place with you..",
+    description: "I just want a place with you... I just want a place...",
     file: "sarki1.mp3",
     cover: "sarki1.webp",
   },
   {
     id: "muzik-2",
-    name: "Sarki 2",
-    artist: "Örnek Sanatçı",
+    name: "Pretty Girls Makes Graves",
+    artist: "The Smiths",
     description: "Bu müzik için açıklama buraya gelecek. Dosyadaki bu yazıyı değiştir.",
     file: "sarki2.mp3",
-    cover: "sarki2.svg",
+    cover: "sarki2.webp",
   },
   {
     id: "muzik-3",
@@ -39,7 +39,7 @@ export const musicTracks: MusicTrack[] = [
     artist: "Örnek Sanatçı",
     description: "Bu müzik için açıklama buraya gelecek. Dosyadaki bu yazıyı değiştir.",
     file: "sarki3.mp3",
-    cover: "sarki3.svg",
+    cover: "sarki3.webp",
   },
   {
     id: "muzik-4",
@@ -47,7 +47,7 @@ export const musicTracks: MusicTrack[] = [
     artist: "Örnek Sanatçı",
     description: "Bu müzik için açıklama buraya gelecek. Dosyadaki bu yazıyı değiştir.",
     file: "sarki4.mp3",
-    cover: "sarki4.svg",
+    cover: "sarki4.webp",
   },
   {
     id: "muzik-5",
@@ -55,7 +55,7 @@ export const musicTracks: MusicTrack[] = [
     artist: "Örnek Sanatçı",
     description: "Bu müzik için açıklama buraya gelecek. Dosyadaki bu yazıyı değiştir.",
     file: "sarki5.mp3",
-    cover: "sarki5.svg",
+    cover: "sarki5.webp",
   },
   {
     id: "muzik-6",
@@ -63,6 +63,6 @@ export const musicTracks: MusicTrack[] = [
     artist: "Örnek Sanatçı",
     description: "Bu müzik için açıklama buraya gelecek. Dosyadaki bu yazıyı değiştir.",
     file: "sarki6.mp3",
-    cover: "sarki6.svg",
+    cover: "sarki6.webp",
   },
 ];
