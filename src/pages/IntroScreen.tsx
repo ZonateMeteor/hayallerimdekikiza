@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { birthdayMessage, recipientName } from "../data/birthdayMessage";
 import { Menu } from "lucide-react";
 
@@ -26,15 +26,6 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
   return (
     <>
       <style>{`
-        @keyframes stemGrow {
-          0% { stroke-dashoffset: var(--dash-len); opacity: 0; }
-          100% { stroke-dashoffset: 0; opacity: 1; }
-        }
-        @keyframes bloomStagger {
-          0% { transform: scale(0) rotate(-18deg); opacity: 0; filter: blur(6px) drop-shadow(0 0 0px rgba(168,85,247,0)); }
-          68% { transform: scale(1.08) rotate(4deg); opacity: 1; filter: blur(0px) drop-shadow(0 0 18px rgba(192,132,252,0.75)); }
-          100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0px) drop-shadow(0 0 10px rgba(147,51,234,0.35)); }
-        }
         @keyframes floatDust {
           0% { transform: translateY(0) scale(1); opacity: 0; }
           50% { opacity: 0.9; }
@@ -75,10 +66,6 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
             transform: scale(1) rotateY(0deg) rotateZ(0deg) translateY(0);
             filter: blur(0) brightness(1);
           }
-        }
-        @keyframes petalFloat {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-5px) rotate(2deg); }
         }
       `}</style>
 
@@ -138,7 +125,8 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
 
         {stage === "flowers" && (
           <div className="relative z-10 flex flex-col items-center gap-6 animate-in fade-in duration-1000">
-            <BouquetScene />
+            {/* CANVAS TABANLI YENİ ÇİÇEK SAHNESİ */}
+            <BouquetCanvasScene />
             <p className="mt-2 text-4xl font-extralight tracking-widest text-purple-100">{recipientName}</p>
             <button
               onClick={() => setStage("message")}
@@ -213,117 +201,64 @@ function GiftBox({
   );
 }
 
-function BouquetScene() {
-  const petals = [
-    { x: 100, y: 45, s: 1.0, c: "#7c3aed", r: 0 },
-    { x: 78, y: 58, s: 0.95, c: "#a855f7", r: -18 },
-    { x: 122, y: 58, s: 0.95, c: "#9333ea", r: 18 },
-    { x: 58, y: 78, s: 0.88, c: "#c084fc", r: -28 },
-    { x: 142, y: 78, s: 0.88, c: "#d946ef", r: 28 },
-    { x: 90, y: 82, s: 0.72, c: "#8b5cf6", r: -8 },
-    { x: 110, y: 82, s: 0.72, c: "#ec4899", r: 8 },
-    { x: 72, y: 102, s: 0.8, c: "#6d28d9", r: -22 },
-    { x: 128, y: 102, s: 0.8, c: "#8b5cf6", r: 22 },
-    { x: 50, y: 108, s: 0.72, c: "#a855f7", r: -34 },
-    { x: 150, y: 108, s: 0.72, c: "#d946ef", r: 34 },
-    { x: 100, y: 118, s: 0.92, c: "#7c3aed", r: 0 },
-  ];
+// YENİ BİLEŞEN: Çiçeği HTML5 Canvas içine çizen fonksiyonel alan
+function BouquetCanvasScene() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const leaves = [
-    { x: 48, y: 150, s: 1, r: -28 },
-    { x: 70, y: 165, s: 1.15, r: -10 },
-    { x: 132, y: 164, s: 1.15, r: 12 },
-    { x: 154, y: 150, s: 1, r: 30 },
-  ];
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-  const stems = [
-    { x1: 95, y1: 178, x2: 76, y2: 88 },
-    { x1: 100, y1: 180, x2: 95, y2: 86 },
-    { x1: 106, y1: 178, x2: 122, y2: 90 },
-    { x1: 88, y1: 176, x2: 58, y2: 98 },
-    { x1: 114, y1: 176, x2: 144, y2: 98 },
-  ];
+    // Lottie Animated SVG dosyanı JavaScript Image nesnesi olarak yüklüyoruz
+    const img = new Image();
+    // Buradaki yol, projenin 'public' klasöründeki veya atadığın yerdeki isme sadık kalmalı
+    img.src = "/animated-flower.svg"; 
 
+    let animationId: number;
+
+    const render = () => {
+      // Her karede canvas'ı temizle, böylece üst üste binip kasma yapmaz
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Resim yüklendiyse canvas merkezine tam oturacak şekilde çiz
+      if (img.complete)
+      {ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      }
+      // Animasyonun akıcı oynamaya devam etmesi için 
+      animationId = requestAnimationFrame(render);
+    };img.onload = () => {
+      render();
+    };
+    // Eğer resim cache'den hızlıca yüklenirse direkt tetikle
+    if (img.complete) {
+      render();
+    }
+    return () => cancelAnimationFrame(animationId);
+  }, []);
   return (
-    <div className="relative flex h-[560px] w-full flex-col items-center justify-end" style={{ animation: "bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" }}>
-      <div className="relative mb-5 h-[420px] w-[360px]">
-        <svg viewBox="0 0 200 220" className="h-full w-full overflow-visible">
-          <defs>
-            <radialGradient id="petalGlow" cx="50%" cy="35%" r="70%">
-              <stop offset="0%" stopColor="#f5d0fe" stopOpacity="0.95" />
-              <stop offset="45%" stopColor="#c084fc" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#6d28d9" stopOpacity="1" />
-            </radialGradient>
-            <radialGradient id="centerGlow" cx="40%" cy="35%" r="70%">
-              <stop offset="0%" stopColor="#fef08a" stopOpacity="1" />
-              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.85" />
-            </radialGradient>
-            <linearGradient id="wrapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#2e1065" />
-              <stop offset="55%" stopColor="#5b21b6" />
-              <stop offset="100%" stopColor="#0f172a" />
-            </linearGradient>
-            <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#86efac" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#14532d" stopOpacity="1" />
-            </linearGradient>
-          </defs>
+    <div
+      className="relative flex h-[460px] w-full flex-col items-center justify-end"
+      style={{ animation: "bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" }}
+      > 
+    </div> 
 
-          <ellipse cx="100" cy="196" rx="54" ry="10" fill="#0f172a" opacity="0.45" />
-
-          {stems.map((stem, i) => (
-            <path
-              key={i}
-              d={`M ${stem.x1} ${stem.y1} C ${stem.x1 - 10} ${stem.y1 - 32}, ${stem.x2 + 8} ${stem.y2 - 34}, ${stem.x2} ${stem.y2}`}
-              stroke="#2f6b2f"
-              strokeWidth="3.2"
-              strokeLinecap="round"
-              fill="none"
-              style={{ strokeDasharray: 1, strokeDashoffset: 0 }}
-            />
-          ))}
-
-          {leaves.map((leaf, i) => (
-            <g key={i} transform={`translate(${leaf.x}, ${leaf.y}) rotate(${leaf.r}) scale(${leaf.s})`} style={{ animation: `petalFloat 5s ease-in-out ${i * 0.35}s infinite` }}>
-              <path d="M 0 0 C 18 -10, 28 8, 12 24 C 0 30, -12 22, -14 10 C -15 2, -8 -3, 0 0 Z" fill="url(#leafGrad)" opacity="0.95" />
-              <path d="M -2 2 C 8 8, 12 14, 12 22" stroke="#d1fae5" strokeWidth="1.1" opacity="0.35" fill="none" />
-            </g>
-          ))}
-
-          <path d="M 46 152 C 68 180, 132 180, 154 152 L 144 194 L 56 194 Z" fill="url(#wrapGrad)" opacity="0.95" />
-          <path d="M 56 194 C 74 182, 126 182, 144 194 L 138 206 L 62 206 Z" fill="#1e1b4b" opacity="0.95" />
-          <path d="M 58 194 L 100 160 L 142 194" fill="none" stroke="#d8b4fe" strokeWidth="1.4" opacity="0.45" />
-          <path d="M 64 188 C 80 174, 120 174, 136 188" fill="none" stroke="#c084fc" strokeWidth="1" opacity="0.35" />
-
-          {petals.map((petal, i) => (
-            <g key={i} transform={`translate(${petal.x}, ${petal.y}) scale(${petal.s}) rotate(${petal.r})`} style={{ animation: `bloomStagger 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 0.08}s forwards` }} className="origin-center scale-0">
-              <path d="M 0 -18 C 12 -20, 20 -6, 16 8 C 12 22, 0 26, 0 26 C 0 26, -12 22, -16 8 C -20 -6, -12 -20, 0 -18 Z" fill={petal.c} opacity="0.96" />
-              <path d="M 0 -14 C 7 -15, 11 -5, 8 6 C 6 15, 0 18, 0 18 C 0 18, -6 15, -8 6 C -11 -5, -7 -15, 0 -14 Z" fill="#f5d0fe" opacity="0.18" />
-            </g>
-          ))}
-
-          {[
-            { x: 100, y: 46, s: 1.1 },
-            { x: 82, y: 62, s: 0.82 },
-            { x: 118, y: 62, s: 0.82 },
-            { x: 64, y: 84, s: 0.74 },
-            { x: 136, y: 84, s: 0.74 },
-            { x: 100, y: 88, s: 0.68 },
-            { x: 100, y: 116, s: 0.88 },
-          ].map((b, i) => (
-            <g key={`center-${i}`} transform={`translate(${b.x}, ${b.y}) scale(${b.s})`}>
-              <circle cx="0" cy="0" r="8" fill="url(#centerGlow)" />
-              <circle cx="0" cy="0" r="3" fill="#7c2d12" opacity="0.4" />
-            </g>
-          ))}
-        </svg>
+         // {/* Canvas Elementimiz */}
+      <div className="relative mb-5 flex h-[340px] w-[340px] items-center justify-center overflow-visible">
+        <canvas
+          ref={canvasRef}
+          width={400}
+          height={400}
+          className="h-full w-full object-contain"
+        />
       </div>
 
-      <div className="text-center">
+      <div className="text-center z-10">
         <p className="text-xl font-light tracking-[0.35em] text-purple-200">BU ÇİÇEKLER SANA</p>
         <p className="mt-2 text-5xl font-light tracking-[0.2em] text-pink-300">&lt;3</p>
       </div>
 
+     // {/* Arka plandaki parıltıları da bozmadan Canvas'ın arkasında korudum */}
       {Array.from({ length: 24 }).map((_, i) => (
         <span
           key={i}
