@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { birthdayMessage, recipientName } from "../data/birthdayMessage";
 import { Menu } from "lucide-react";
 
@@ -26,6 +26,15 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
   return (
     <>
       <style>{`
+        @keyframes stemGrow {
+          0% { stroke-dashoffset: var(--dash-len); opacity: 0; }
+          100% { stroke-dashoffset: 0; opacity: 1; }
+        }
+        @keyframes bloomStagger {
+          0% { transform: scale(0) rotate(-18deg); opacity: 0; filter: blur(6px) drop-shadow(0 0 0px rgba(168,85,247,0)); }
+          68% { transform: scale(1.08) rotate(4deg); opacity: 1; filter: blur(0px) drop-shadow(0 0 18px rgba(192,132,252,0.75)); }
+          100% { transform: scale(1) rotate(0deg); opacity: 1; filter: blur(0px) drop-shadow(0 0 10px rgba(147,51,234,0.35)); }
+        }
         @keyframes floatDust {
           0% { transform: translateY(0) scale(1); opacity: 0; }
           50% { opacity: 0.9; }
@@ -66,6 +75,10 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
             transform: scale(1) rotateY(0deg) rotateZ(0deg) translateY(0);
             filter: blur(0) brightness(1);
           }
+        }
+        @keyframes petalFloat {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-5px) rotate(2deg); }
         }
       `}</style>
 
@@ -125,8 +138,7 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
 
         {stage === "flowers" && (
           <div className="relative z-10 flex flex-col items-center gap-6 animate-in fade-in duration-1000">
-            {/* CANVAS TABANLI YENİ ÇİÇEK SAHNESİ */}
-            <BouquetCanvasScene />
+            <BouquetScene />
             <p className="mt-2 text-4xl font-extralight tracking-widest text-purple-100">{recipientName}</p>
             <button
               onClick={() => setStage("message")}
@@ -201,72 +213,150 @@ function GiftBox({
   );
 }
 
-// YENİ BİLEŞEN: Çiçeği HTML5 Canvas içine çizen fonksiyonel alan
-function BouquetCanvasScene() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+function BouquetScene() {
+  const flowers = [
+    { x: 80, y: 120, size: 1.2, color: "#8b5cf6", rotation: -10 },
+    { x: 120, y: 100, size: 1.0, color: "#7c3aed", rotation: 15 },
+    { x: 60, y: 150, size: 0.9, color: "#a855f7", rotation: -5 },
+    { x: 140, y: 140, size: 1.1, color: "#c084fc", rotation: 8 },
+    { x: 100, y: 80, size: 1.3, color: "#9333ea", rotation: 0 },
+    { x: 40, y: 110, size: 0.8, color: "#d946ef", rotation: -12 },
+    { x: 160, y: 130, size: 0.95, color: "#6d28d9", rotation: 10 },
+    { x: 90, y: 160, size: 1.0, color: "#7c3aed", rotation: -8 },
+    { x: 130, y: 90, size: 0.85, color: "#a855f7", rotation: 5 },
+    { x: 70, y: 100, size: 1.1, color: "#c084fc", rotation: -3 },
+  ];
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const img = new Image();
-    img.src = "/animated-flower.svg"; 
-
-    let animationId: number;
-
-    const render = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (img.complete) {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      }
-      animationId = requestAnimationFrame(render);
-    };
-
-    img.onload = () => {
-      render();
-    };
-
-    if (img.complete) {
-      render();
-    }
-
-    return () => cancelAnimationFrame(animationId);
-  }, []);
+  const hearts = [
+    { x: 30, y: 180, size: 0.6, color: "#ec4899", opacity: 0.2 },
+    { x: 170, y: 200, size: 0.5, color: "#f472b6", opacity: 0.15 },
+    { x: 50, y: 220, size: 0.4, color: "#ec4899", opacity: 0.1 },
+    { x: 150, y: 170, size: 0.55, color: "#f472b6", opacity: 0.25 },
+    { x: 100, y: 240, size: 0.45, color: "#ec4899", opacity: 0.12 },
+  ];
 
   return (
-    <div 
-      className="relative flex h-[460px] w-full flex-col items-center justify-end" 
+    <div
+      className="relative flex h-[560px] w-full flex-col items-center justify-end overflow-hidden"
       style={{ animation: "bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" }}
     >
-      <div className="relative mb-5 flex h-[340px] w-[340px] items-center justify-center overflow-visible">
-        <canvas
-          ref={canvasRef}
-          width={400}
-          height={400}
-          className="h-full w-full object-contain"
-        />
+      {/* Soft arka plan */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-pink-900/10 to-transparent" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-purple-900/5 to-[#05030a]" />
+      <div
+        className="absolute top-1/2 left-1/2 h-[40rem] w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-pink-500/10 blur-[120px]"
+        style={{ animation: "ambientGlow 10s infinite ease-in-out" }}
+      />
+
+      {/* Arka plandaki kalpler */}
+      {hearts.map((heart, i) => (
+        <svg
+          key={i}
+          className="absolute"
+          style={{
+            left: `${heart.x}%`,
+            top: `${heart.y}%`,
+            transform: `translate(-50%, -50%) scale(${heart.size})`,
+            opacity: heart.opacity,
+          }}
+        >
+          <path
+            d="M10,30 C20,0 50,0 60,30 C50,60 10,60 10,30 Z"
+            fill={heart.color}
+            filter="blur(1px)"
+          />
+        </svg>
+      ))}
+
+      {/* Buket ve çiçekler */}
+      <div className="relative z-10 mb-10 h-[400px] w-[360px]">
+        <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible">
+          {/* Buket sapları */}
+          <g transform="translate(100, 180)">
+            {flowers.map((_, i) => (
+              <path
+                key={`stem-${i}`}
+                d="M 0 0 Q -10 -40 0 -80"
+                stroke="#2f6b2f"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                fill="none"
+                opacity="0.6"
+              />
+            ))}
+          </g>
+
+          {/* Çiçekler */}
+          {flowers.map((flower, i) => (
+            <g
+              key={i}
+              transform={`translate(${flower.x}, ${flower.y}) scale(${flower.size}) rotate(${flower.rotation})`}
+              style={{
+                animation: `bloomStagger 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 0.08}s forwards`,
+              }}
+              className="origin-center scale-0"
+            >
+              {/* Merkez */}
+              <circle cx="0" cy="0" r="6" fill="#f3e8ff" />
+              <circle cx="0" cy="0" r="4" fill={flower.color} />
+
+              {/* Yapraklar */}
+              {Array.from({ length: 6 }).map((_, j) => {
+                const angle = (j / 6) * Math.PI * 2;
+                const x = 18 * Math.cos(angle);
+                const y = 18 * Math.sin(angle);
+                return (
+                  <path
+                    key={j}
+                    d="M 0 0 C 8 -12, 16 -8, 20 0 C 16 8, 8 12, 0 0 Z"
+                    fill={flower.color}
+                    opacity="0.85"
+                    transform={`translate(${x}, ${y}) rotate(${j * 60 + (i % 2 === 0 ? 5 : -5)})`}
+                    style={{
+                      animation: `petalFloat 4s ease-in-out ${i * 0.2 + j * 0.1}s infinite`,
+                    }}
+                  />
+                );
+              })}
+            </g>
+          ))}
+
+          {/* Buket kâğıdı */}
+          <path
+            d="M 40 170 C 60 190, 140 190, 160 170 L 150 200 L 50 200 Z"
+            fill="#1e1b4b"
+            opacity="0.8"
+          />
+          <path
+            d="M 50 200 L 100 160 L 150 200"
+            fill="none"
+            stroke="#d8b4fe"
+            strokeWidth="1"
+            opacity="0.3"
+          />
+        </svg>
       </div>
 
-      <div className="text-center z-10">
+      {/* Metin */}
+      <div className="text-center">
         <p className="text-xl font-light tracking-[0.35em] text-purple-200">BU ÇİÇEKLER SANA</p>
         <p className="mt-2 text-5xl font-light tracking-[0.2em] text-pink-300">&lt;3</p>
       </div>
 
-      {Array.from({ length: 24 }).map((_, i) => (
+      {/* Soft ışık parçacıkları */}
+      {Array.from({ length: 15 }).map((_, i) => (
         <span
           key={i}
           className="pointer-events-none absolute rounded-full"
           style={{
-            left: `${(i * 17) % 100}%`,
-            top: `${(i * 11) % 78}%`,
+            left: `${(i * 13) % 90 + 5}%`,
+            top: `${(i * 7) % 80 + 10}%`,
             width: `${(i % 3) + 1}px`,
             height: `${(i % 3) + 1}px`,
             backgroundColor: i % 2 === 0 ? "#d946ef" : "#c084fc",
-            animation: `floatDust ${2.6 + (i % 5) * 0.4}s infinite ease-out`,
-            animationDelay: `${i * 0.09}s`,
-            boxShadow: "0 0 8px rgba(217, 70, 239, 0.8)",
+            animation: `floatDust ${2 + (i % 4) * 0.5}s infinite ease-out`,
+            animationDelay: `${i * 0.1}s`,
+            boxShadow: "0 0 6px rgba(217, 70, 239, 0.7)",
           }}
         />
       ))}
