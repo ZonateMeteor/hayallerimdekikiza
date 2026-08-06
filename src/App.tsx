@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { MenuDrawer, type Route } from "./components/MenuDrawer";
 import { IntroScreen } from "./pages/IntroScreen";
 import { PoemsPage } from "./pages/PoemsPage";
-import { ConfessionsPage } from "./pages/ConfessionsPage";
 import { MemoriesPage } from "./pages/MemoriesPage";
 import { MusicPage } from "./pages/MusicPage";
 import { GamesPage } from "./pages/GamesPage";
@@ -88,12 +87,11 @@ export default function App() {
       {route === "home" && (
         <IntroScreen 
           onOpenMenu={() => setMenuOpen(true)} 
-          onStartMusic={() => playGlobalMusic("sarki1.mp3")} 
+          onStartMusic={() => playGlobalMusic("sarki2.mp3")} 
         />
       )}
       
       {route === "poems" && <PoemsPage onBack={back} />}
-      {route === "confessions" && <ConfessionsPage onBack={back} />}
       {route === "memories" && <MemoriesPage onBack={back} />}
       
       {route === "music" && (
