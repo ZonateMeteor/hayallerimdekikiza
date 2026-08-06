@@ -211,39 +211,35 @@ function BouquetCanvasScene() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Lottie Animated SVG dosyanı JavaScript Image nesnesi olarak yüklüyoruz
     const img = new Image();
-    // Buradaki yol, projenin 'public' klasöründeki veya atadığın yerdeki isme sadık kalmalı
     img.src = "/animated-flower.svg"; 
 
     let animationId: number;
 
     const render = () => {
-      // Her karede canvas'ı temizle, böylece üst üste binip kasma yapmaz
-ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Resim yüklendiyse canvas merkezine tam oturacak şekilde çiz
-      if (img.complete)
-      {ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (img.complete) {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       }
-      // Animasyonun akıcı oynamaya devam etmesi için 
       animationId = requestAnimationFrame(render);
-    };img.onload = () => {
+    };
+
+    img.onload = () => {
       render();
     };
-    // Eğer resim cache'den hızlıca yüklenirse direkt tetikle
+
     if (img.complete) {
       render();
     }
+
     return () => cancelAnimationFrame(animationId);
   }, []);
-  return (
-    <div
-      className="relative flex h-[460px] w-full flex-col items-center justify-end"
-      style={{ animation: "bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" }}
-      > 
-    </div> 
 
-         // {/* Canvas Elementimiz */}
+  return (
+    <div 
+      className="relative flex h-[460px] w-full flex-col items-center justify-end" 
+      style={{ animation: "bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" }}
+    >
       <div className="relative mb-5 flex h-[340px] w-[340px] items-center justify-center overflow-visible">
         <canvas
           ref={canvasRef}
@@ -258,7 +254,6 @@ ctx.clearRect(0, 0, canvas.width, canvas.height);
         <p className="mt-2 text-5xl font-light tracking-[0.2em] text-pink-300">&lt;3</p>
       </div>
 
-     // {/* Arka plandaki parıltıları da bozmadan Canvas'ın arkasında korudum */}
       {Array.from({ length: 24 }).map((_, i) => (
         <span
           key={i}
