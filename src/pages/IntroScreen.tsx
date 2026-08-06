@@ -80,6 +80,10 @@ export function IntroScreen({ onOpenMenu, onStartMusic }: IntroScreenProps) {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-5px) rotate(2deg); }
         }
+        @keyframes gentleSway {
+          0%, 100% { transform: rotate(-1.5deg); }
+          50% { transform: rotate(1.5deg); }
+        }
       `}</style>
 
       <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#05030a] px-6 font-sans text-white">
@@ -213,26 +217,38 @@ function GiftBox({
   );
 }
 
+// === NEW REALISTIC BOUQUET SCENE ===
 function BouquetScene() {
+  // Flower configurations with proper stem connections
   const flowers = [
-    { x: 80, y: 120, size: 1.2, color: "#8b5cf6", rotation: -10 },
-    { x: 120, y: 100, size: 1.0, color: "#7c3aed", rotation: 15 },
-    { x: 60, y: 150, size: 0.9, color: "#a855f7", rotation: -5 },
-    { x: 140, y: 140, size: 1.1, color: "#c084fc", rotation: 8 },
-    { x: 100, y: 80, size: 1.3, color: "#9333ea", rotation: 0 },
-    { x: 40, y: 110, size: 0.8, color: "#d946ef", rotation: -12 },
-    { x: 160, y: 130, size: 0.95, color: "#6d28d9", rotation: 10 },
-    { x: 90, y: 160, size: 1.0, color: "#7c3aed", rotation: -8 },
-    { x: 130, y: 90, size: 0.85, color: "#a855f7", rotation: 5 },
-    { x: 70, y: 100, size: 1.1, color: "#c084fc", rotation: -3 },
+    { x: 80, y: 120, size: 1.2, color: "#8b5cf6", stemLength: 60, rotation: -10, stemCurve: -15, delay: 0.0 },
+    { x: 120, y: 100, size: 1.0, color: "#7c3aed", stemLength: 70, rotation: 15, stemCurve: 10, delay: 0.1 },
+    { x: 60, y: 150, size: 0.9, color: "#a855f7", stemLength: 50, rotation: -5, stemCurve: -20, delay: 0.2 },
+    { x: 140, y: 140, size: 1.1, color: "#c084fc", stemLength: 65, rotation: 8, stemCurve: 15, delay: 0.3 },
+    { x: 100, y: 80, size: 1.3, color: "#9333ea", stemLength: 80, rotation: 0, stemCurve: 0, delay: 0.4 },
+    { x: 40, y: 110, size: 0.8, color: "#d946ef", stemLength: 55, rotation: -12, stemCurve: -10, delay: 0.5 },
+    { x: 160, y: 130, size: 0.95, color: "#6d28d9", stemLength: 75, rotation: 10, stemCurve: 20, delay: 0.6 },
+    { x: 90, y: 160, size: 1.0, color: "#7c3aed", stemLength: 60, rotation: -8, stemCurve: -5, delay: 0.7 },
+    { x: 130, y: 90, size: 0.85, color: "#a855f7", stemLength: 70, rotation: 5, stemCurve: 8, delay: 0.8 },
+    { x: 70, y: 100, size: 1.1, color: "#c084fc", stemLength: 65, rotation: -3, stemCurve: -12, delay: 0.9 },
   ];
 
+  // Leaves for the bouquet
+  const leaves = [
+    { x: 70, y: 180, size: 0.8, rotation: -30 },
+    { x: 130, y: 185, size: 0.9, rotation: 20 },
+    { x: 50, y: 175, size: 0.7, rotation: -40 },
+    { x: 150, y: 170, size: 0.85, rotation: 35 },
+    { x: 100, y: 190, size: 0.75, rotation: 10 },
+  ];
+
+  // Background hearts
   const hearts = [
-    { x: 30, y: 180, size: 0.6, color: "#ec4899", opacity: 0.2 },
-    { x: 170, y: 200, size: 0.5, color: "#f472b6", opacity: 0.15 },
-    { x: 50, y: 220, size: 0.4, color: "#ec4899", opacity: 0.1 },
-    { x: 150, y: 170, size: 0.55, color: "#f472b6", opacity: 0.25 },
-    { x: 100, y: 240, size: 0.45, color: "#ec4899", opacity: 0.12 },
+    { x: 25, y: 185, size: 0.5, color: "#ec4899", opacity: 0.15 },
+    { x: 175, y: 195, size: 0.4, color: "#f472b6", opacity: 0.1 },
+    { x: 40, y: 210, size: 0.45, color: "#ec4899", opacity: 0.12 },
+    { x: 160, y: 175, size: 0.55, color: "#f472b6", opacity: 0.2 },
+    { x: 100, y: 220, size: 0.4, color: "#ec4899", opacity: 0.08 },
   ];
 
   return (
@@ -240,7 +256,7 @@ function BouquetScene() {
       className="relative flex h-[560px] w-full flex-col items-center justify-end overflow-hidden"
       style={{ animation: "bouquetSpinEntry 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards" }}
     >
-      {/* Soft arka plan */}
+      {/* Soft background with glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-pink-900/10 to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-purple-900/5 to-[#05030a]" />
       <div
@@ -248,118 +264,190 @@ function BouquetScene() {
         style={{ animation: "ambientGlow 10s infinite ease-in-out" }}
       />
 
-      {/* Arka plandaki kalpler */}
+      {/* Background hearts */}
       {hearts.map((heart, i) => (
         <svg
-          key={i}
+          key={`heart-${i}`}
           className="absolute"
           style={{
             left: `${heart.x}%`,
             top: `${heart.y}%`,
             transform: `translate(-50%, -50%) scale(${heart.size})`,
             opacity: heart.opacity,
+            filter: 'blur(0.5px)',
           }}
         >
-          <path
-            d="M10,30 C20,0 50,0 60,30 C50,60 10,60 10,30 Z"
-            fill={heart.color}
-            filter="blur(1px)"
-          />
+          <path d="M10,30 C20,0 50,0 60,30 C50,60 10,60 10,30 Z" fill={heart.color} />
         </svg>
       ))}
 
-      {/* Buket ve çiçekler */}
-      <div className="relative z-10 mb-10 h-[400px] w-[360px]">
-        <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible">
-          {/* Buket sapları */}
-          <g transform="translate(100, 180)">
-            {flowers.map((_, i) => (
-              <path
-                key={`stem-${i}`}
-                d="M 0 0 Q -10 -40 0 -80"
-                stroke="#2f6b2f"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                fill="none"
-                opacity="0.6"
-              />
-            ))}
-          </g>
-
-          {/* Çiçekler */}
-          {flowers.map((flower, i) => (
-            <g
-              key={i}
-              transform={`translate(${flower.x}, ${flower.y}) scale(${flower.size}) rotate(${flower.rotation})`}
-              style={{
-                animation: `bloomStagger 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 0.08}s forwards`,
-              }}
-              className="origin-center scale-0"
-            >
-              {/* Merkez */}
-              <circle cx="0" cy="0" r="6" fill="#f3e8ff" />
-              <circle cx="0" cy="0" r="4" fill={flower.color} />
-
-              {/* Yapraklar */}
-              {Array.from({ length: 6 }).map((_, j) => {
-                const angle = (j / 6) * Math.PI * 2;
-                const x = 18 * Math.cos(angle);
-                const y = 18 * Math.sin(angle);
-                return (
-                  <path
-                    key={j}
-                    d="M 0 0 C 8 -12, 16 -8, 20 0 C 16 8, 8 12, 0 0 Z"
-                    fill={flower.color}
-                    opacity="0.85"
-                    transform={`translate(${x}, ${y}) rotate(${j * 60 + (i % 2 === 0 ? 5 : -5)})`}
-                    style={{
-                      animation: `petalFloat 4s ease-in-out ${i * 0.2 + j * 0.1}s infinite`,
-                    }}
-                  />
-                );
-              })}
-            </g>
-          ))}
-
-          {/* Buket kâğıdı */}
-          <path
-            d="M 40 170 C 60 190, 140 190, 160 170 L 150 200 L 50 200 Z"
-            fill="#1e1b4b"
-            opacity="0.8"
-          />
-          <path
-            d="M 50 200 L 100 160 L 150 200"
-            fill="none"
-            stroke="#d8b4fe"
-            strokeWidth="1"
-            opacity="0.3"
-          />
-        </svg>
-      </div>
-
-      {/* Metin */}
-      <div className="text-center">
-        <p className="text-xl font-light tracking-[0.35em] text-purple-200">BU ÇİÇEKLER SANA</p>
-        <p className="mt-2 text-5xl font-light tracking-[0.2em] text-pink-300">&lt;3</p>
-      </div>
-
-      {/* Soft ışık parçacıkları */}
-      {Array.from({ length: 15 }).map((_, i) => (
+      {/* Floating particles */}
+      {Array.from({ length: 20 }).map((_, i) => (
         <span
-          key={i}
+          key={`dust-${i}`}
           className="pointer-events-none absolute rounded-full"
           style={{
-            left: `${(i * 13) % 90 + 5}%`,
-            top: `${(i * 7) % 80 + 10}%`,
+            left: `${(i * 17) % 95 + 2.5}%`,
+            top: `${(i * 11) % 70 + 20}%`,
             width: `${(i % 3) + 1}px`,
             height: `${(i % 3) + 1}px`,
             backgroundColor: i % 2 === 0 ? "#d946ef" : "#c084fc",
-            animation: `floatDust ${2 + (i % 4) * 0.5}s infinite ease-out`,
-            animationDelay: `${i * 0.1}s`,
-            boxShadow: "0 0 6px rgba(217, 70, 239, 0.7)",
+            animation: `floatDust ${2.6 + (i % 5) * 0.4}s infinite ease-out`,
+            animationDelay: `${i * 0.09}s`,
+            boxShadow: "0 0 8px rgba(217, 70, 239, 0.7)",
           }}
         />
       ))}
+
+      {/* Main bouquet SVG */}
+      <svg viewBox="0 0 200 200" className="relative z-10 h-[400px] w-[360px] mb-10 overflow-visible">
+        <defs>
+          {/* Gradients for depth */}
+          <linearGradient id="wrapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#2e1065" />
+            <stop offset="55%" stopColor="#5b21b6" />
+            <stop offset="100%" stopColor="#0f172a" />
+          </linearGradient>
+          <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#86efac" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#14532d" stopOpacity="1" />
+          </linearGradient>
+          <radialGradient id="petalGlow" cx="50%" cy="50%" r="70%">
+            <stop offset="0%" stopColor="rgba(245,208,254,0.8)" />
+            <stop offset="100%" stopColor="rgba(147,51,234,0.3)" />
+          </radialGradient>
+        </defs>
+
+        {/* Bouquet wrap */}
+        <g style={{ filter: "drop-shadow(0 10px 20px rgba(147,51,234,0.4))" }}>
+          <path d="M 35 175 C 60 195 140 195 165 175 L 155 205 L 45 205 Z" fill="url(#wrapGrad)" opacity="0.95" />
+          <path d="M 45 205 L 100 165 L 155 205" fill="none" stroke="#d8b4fe" strokeWidth="1" opacity="0.4" />
+          <path d="M 50 200 C 70 190 130 190 150 200" fill="none" stroke="#c084fc" strokeWidth="0.8" opacity="0.3" />
+        </g>
+
+        {/* Leaves */}
+        {leaves.map((leaf, i) => (
+          <g
+            key={`leaf-${i}`}
+            transform={`translate(${leaf.x}, ${leaf.y}) rotate(${leaf.rotation}) scale(${leaf.size})`}
+            style={{
+              animation: `gentleSway 6s ease-in-out ${i * 0.4}s infinite alternate`,
+              transformOrigin: "center"
+            }}
+          >
+            <path d="M 0 0 C 18 -10 28 8 12 24 C 0 30 -12 22 -14 10 C -15 2 -8 -3 0 0 Z" fill="url(#leafGrad)" />
+            <path d="M -2 2 C 8 8 12 14 12 22" stroke="#d1fae5" strokeWidth="1.1" opacity="0.35" fill="none" />
+            <path d="M 0 -2 C 6 -10 10 -8 8 0" stroke="#2f6b2f" strokeWidth="0.8" opacity="0.5" fill="none" />
+          </g>
+        ))}
+
+        {/* Flowers - each with its own stem connected to the bouquet */}
+        {flowers.map((flower) => (
+          <Flower
+            key={`${flower.x}-${flower.y}`}
+            x={flower.x}
+            y={flower.y}
+            size={flower.size}
+            color={flower.color}
+            stemLength={flower.stemLength}
+            rotation={flower.rotation}
+            stemCurve={flower.stemCurve}
+            delay={flower.delay}
+          />
+        ))}
+      </svg>
+
+      {/* Text overlay */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 text-center z-20">
+        <p className="text-xl font-light tracking-[0.35em] text-purple-200">BU ÇİÇEKLER SANA</p>
+        <p className="mt-2 text-5xl font-light tracking-[0.2em] text-pink-300">&lt;3</p>
+      </div>
     </div>
+  );
+}
+
+// Realistic flower component with proper stem connection
+function Flower({ x, y, size, color, stemLength, rotation, stemCurve, delay }) {
+  const petals = 7; // Number of petals per flower
+  const petalSize = size * 15;
+  const centerSize = size * 4;
+
+  return (
+    <g
+      transform={`translate(${x}, ${y}) rotate(${rotation})`}
+      style={{
+        animation: `bloomStagger 1s cubic-bezier(0.34, 1.56, 0.64, 1) ${delay}s forwards`,
+      }}
+      className="origin-center scale-0"
+    >
+      {/* Curved stem connecting to bouquet */}
+      <path
+        d={`M 0 0 C ${stemCurve} -${stemLength * 0.4} ${-stemCurve * 0.8} -${stemLength * 0.8} 0 -${stemLength}`}
+        stroke="#2f6b2f"
+        strokeWidth={size * 1.2}
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.7"
+        style={{ filter: "drop-shadow(0 2px 4px rgba(47,107,47,0.3))" }}
+      />
+
+      {/* Flower head */}
+      <g
+        transform={`translate(0, -${stemLength})`}
+        style={{ filter: "drop-shadow(0 0 15px rgba(147,51,234,0.5))" }}
+      >
+        {/* Center with depth */}
+        <defs>
+          <radialGradient id={`center-${x}-${y}`} cx="50%" cy="50%" r="70%">
+            <stop offset="0%" stopColor="#fef08a" />
+            <stop offset="100%" stopColor="#f59e0b" />
+          </radialGradient>
+        </defs>
+        <circle cx="0" cy="0" r={centerSize} fill="url(#center)" opacity="0.9" />
+        <circle cx="0" cy="0" r={centerSize * 0.7} fill={color} />
+        <circle cx="0" cy="0" r={centerSize * 0.4} fill="#7c2d12" opacity="0.3" />
+
+        {/* Realistic petals with highlights and shadows */}
+        {Array.from({ length: petals }).map((_, j) => {
+          const angle = (j / petals) * Math.PI * 2;
+          const petalX = petalSize * Math.cos(angle);
+          const petalY = petalSize * Math.sin(angle);
+          const petalRotation = angle * (180 / Math.PI) + (j % 2 === 0 ? 3 : -3);
+
+          return (
+            <g
+              key={j}
+              transform={`translate(${petalX}, ${petalY}) rotate(${petalRotation})`}
+              style={{
+                animation: `petalFloat 5s ease-in-out ${delay + j * 0.15}s infinite`,
+                transformOrigin: "center"
+              }}
+            >
+              {/* Main petal shape - organic bezier curves */}
+              <path
+                d="M 0,-14 C 10,-26 25,-12 30,0 C 25,12 10,26 0,14 C -10,26 -25,12 -30,0 C -25,-12 -10,-26 0,-14 Z"
+                fill={color}
+                opacity="0.85"
+              />
+              {/* Petal highlight */}
+              <path
+                d="M 0,-12 C 8,-22 18,-10 22,0 C 18,10 8,22 0,12 C -8,22 -18,10 -22,0 C -18,-10 -8,-22 0,-12 Z"
+                fill="#f5d0fe"
+                opacity="0.4"
+              />
+              {/* Petal shadow */}
+              <path
+                d="M 0,-14 C 6,-24 16,-16 20,0 C 16,16 6,24 0,14 C -6,24 -16,16 -20,0 C -16,-16 -6,-24 0,-14 Z"
+                fill={color}
+                opacity="0.6"
+                transform="scale(0.9)"
+              />
+              {/* Petal vein details */}
+              <path d="M 0 -2 L 0 2" stroke="#f3e8ff" opacity="0.4" strokeWidth="0.5" />
+            </g>
+          );
+        })}
+      </g>
+    </g>
   );
 }
