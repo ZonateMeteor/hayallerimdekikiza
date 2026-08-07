@@ -29,7 +29,7 @@ export const musicTracks: MusicTrack[] = [
     id: "muzik-2",
     name: "Forwards Beckon Rebound",
     artist: "Adrianne Lenker",
-    description: "Show me picutres that hang in your house",
+    description: "Show me pictures that hang in your house",
     file: "sarki2.mp3",
     cover: "sarki2.webp",
   },
@@ -43,7 +43,7 @@ export const musicTracks: MusicTrack[] = [
   },
   {
     id: "muzik-4",
-    name: "Ez Kurdîstanim",
+    name: "Ez Kurdistanim",
     artist: "Hozan Serhad",
     description: "Tu Kurdistana minî",
     file: "sarki4.mp3",
