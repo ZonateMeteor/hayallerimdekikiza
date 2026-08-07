@@ -4,7 +4,6 @@ import { Menu, X, Home, BookOpen, MessageCircleHeart, Clock, Music, Gamepad2, Me
 export type Route =
   | "home"
   | "poems"
-  | "confessions"
   | "memories"
   | "music"
   | "games"
@@ -21,7 +20,6 @@ interface MenuDrawerProps {
 const items: { route: Route; label: string; icon: React.ElementType }[] = [
   { route: "home", label: "Anasayfa", icon: Home },
   { route: "poems", label: "Şiirler", icon: BookOpen },
-  { route: "confessions", label: "İtiraflar", icon: MessageCircleHeart },
   { route: "memories", label: "Anılar", icon: Clock },
   { route: "music", label: "Müzikler", icon: Music },
   { route: "games", label: "Sıkıldıysan Tıkla", icon: Gamepad2 },
