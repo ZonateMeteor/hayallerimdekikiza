@@ -27,8 +27,8 @@ export function GamesPage({ onBack }: { onBack: () => void }) {
                 <Gamepad2 size={24} />
               </div>
               <div>
-                <h3 className="font-semibold">Yılan</h3>
-                <p className="text-muted text-xs">Yemleri ye, büyü, duvara çarpma.</p>
+                <h3 className="font-semibold">Yılan 🐍</h3>
+                <p className="text-muted text-xs">Yemleri ye, büyü, duvardan geçebiyon ama kendine çarparsan geberirsin.</p>
               </div>
             </button>
             <button
@@ -40,7 +40,7 @@ export function GamesPage({ onBack }: { onBack: () => void }) {
               </div>
               <div>
                 <h3 className="font-semibold">2048</h3>
-                <p className="text-muted text-xs">Aynı sayıları birleştir, 2048'e ulaş.</p>
+                <p className="text-muted text-xs">Aynı sayıları birleştir, 2048'e ulaş pek bir esprisi yok.</p>
               </div>
             </button>
           </div>
