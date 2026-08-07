@@ -28,7 +28,7 @@ export const themes: Theme[] = [
   {
     id: "gece",
     name: "Gece",
-    description: "Derin, karanlık ve huzurlu bir gece teması. Yıldızları andıran vurgular.",
+    description: "Derin, karanlık ve huzurlu bir gece teması. Yıldızları andırıyor",
     bg: "#0a0a12",
     bgGradient: "radial-gradient(circle at 30% 20%, #1a1a2e 0%, #0a0a12 70%)",
     surface: "#151523",
@@ -42,8 +42,8 @@ export const themes: Theme[] = [
   },
   {
     id: "okyanus",
-    name: "Okyanus",
-    description: "Derin deniz mavileri ve sakinleştirici dalga tonları. Serin ve ferah.",
+    name: "Saçlarının Mavisi",
+    description: "Rengini tam tutturamadım ama Denizlerin ve gökyüzünün rengi.",
     bg: "#04111c",
     bgGradient: "radial-gradient(circle at 30% 20%, #0c2d52 0%, #04111c 70%)",
     surface: "#0a2540",
@@ -73,7 +73,7 @@ export const themes: Theme[] = [
   {
     id: "gunbatimi",
     name: "Günbatımı",
-    description: "Sıcak turuncu ve pembe tonları. Romantik ve sıcak bir atmosfer.",
+    description: "Sıcak turuncu ve pembe tonları. daha sıcak ve biraz da Romantik hissettiriyor slfls",
     bg: "#1a0a0f",
     bgGradient: "radial-gradient(circle at 30% 20%, #3d1419 0%, #1a0a0f 70%)",
     surface: "#2a1118",
