@@ -39,14 +39,14 @@ export const musicTracks: MusicTrack[] = [
     artist: "The Smiths",
     description: "I'm not the man you think I am",
     file: "sarki3.mp3",
-    cover: "sarki3.jpeg",
+    cover: "sarki3.webp",
   },
   {
     id: "muzik-4",
     name: "Ez Kurdistanim",
     artist: "Hozan Serhad",
     description: "Tu Kurdistana minî",
-    file: "sarki4.m4a",
+    file: "sarki4.mp3",
     cover: "sarki4.webp",
   },
 ];
